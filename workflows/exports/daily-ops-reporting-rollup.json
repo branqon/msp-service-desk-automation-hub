@@ -1,0 +1,64 @@
+{
+  "name": "daily-ops-reporting-rollup",
+  "version": "1.0.0",
+  "description": "Simulated workflow for reporting KPIs, recurring issue categories, and automation candidate signals.",
+  "nodes": [
+    {
+      "id": "schedule",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "name": "Daily Schedule",
+      "parameters": {
+        "rule": "0 6 * * 1-5"
+      }
+    },
+    {
+      "id": "read-tickets",
+      "type": "n8n-nodes-base.sqlite",
+      "name": "Read Ticket Dataset",
+      "parameters": {
+        "operation": "select",
+        "table": "Ticket"
+      }
+    },
+    {
+      "id": "aggregate-kpis",
+      "type": "n8n-nodes-base.code",
+      "name": "Aggregate KPIs",
+      "parameters": {
+        "language": "javascript",
+        "code": "Calculate processed volume, auto-triage rate, approvals, SLA compliance, and estimated minutes saved."
+      }
+    },
+    {
+      "id": "find-patterns",
+      "type": "n8n-nodes-base.code",
+      "name": "Find Recurring Patterns",
+      "parameters": {
+        "language": "javascript",
+        "code": "Group by category and recommend automation candidates based on repeatability and guardrails."
+      }
+    },
+    {
+      "id": "report-output",
+      "type": "n8n-nodes-base.emailSend",
+      "name": "Send Operations Summary",
+      "parameters": {
+        "subject": "Daily service desk automation summary"
+      }
+    }
+  ],
+  "connections": {
+    "Daily Schedule": {
+      "main": [[{ "node": "Read Ticket Dataset", "type": "main", "index": 0 }]]
+    },
+    "Read Ticket Dataset": {
+      "main": [[{ "node": "Aggregate KPIs", "type": "main", "index": 0 }]]
+    },
+    "Aggregate KPIs": {
+      "main": [[{ "node": "Find Recurring Patterns", "type": "main", "index": 0 }]]
+    },
+    "Find Recurring Patterns": {
+      "main": [[{ "node": "Send Operations Summary", "type": "main", "index": 0 }]]
+    }
+  }
+}

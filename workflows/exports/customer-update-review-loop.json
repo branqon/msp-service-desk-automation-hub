@@ -1,0 +1,65 @@
+{
+  "name": "customer-update-review-loop",
+  "version": "1.0.0",
+  "description": "Simulated workflow for AI draft creation, technician review, and outbound status update logging.",
+  "nodes": [
+    {
+      "id": "ticket-change",
+      "type": "n8n-nodes-base.webhook",
+      "name": "Ticket State Change",
+      "parameters": {
+        "path": "tickets/customer-update",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "id": "draft-message",
+      "type": "n8n-nodes-base.openAi",
+      "name": "Draft Message",
+      "parameters": {
+        "operation": "chat",
+        "model": "mock-ai-provider",
+        "prompt": "Draft a concise customer update based on ticket state and next step."
+      }
+    },
+    {
+      "id": "human-review",
+      "type": "n8n-nodes-base.formTrigger",
+      "name": "Technician Review",
+      "parameters": {
+        "formTitle": "Review Customer Update"
+      }
+    },
+    {
+      "id": "send-message",
+      "type": "n8n-nodes-base.emailSend",
+      "name": "Send Reviewed Update",
+      "parameters": {
+        "subject": "Service desk status update"
+      }
+    },
+    {
+      "id": "audit-review",
+      "type": "n8n-nodes-base.sqlite",
+      "name": "Write Review Audit",
+      "parameters": {
+        "operation": "insert",
+        "table": "AuditEvent"
+      }
+    }
+  ],
+  "connections": {
+    "Ticket State Change": {
+      "main": [[{ "node": "Draft Message", "type": "main", "index": 0 }]]
+    },
+    "Draft Message": {
+      "main": [[{ "node": "Technician Review", "type": "main", "index": 0 }]]
+    },
+    "Technician Review": {
+      "main": [
+        [{ "node": "Send Reviewed Update", "type": "main", "index": 0 }],
+        [{ "node": "Write Review Audit", "type": "main", "index": 0 }]
+      ]
+    }
+  }
+}

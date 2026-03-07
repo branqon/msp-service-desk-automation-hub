@@ -1,0 +1,75 @@
+{
+  "name": "approval-gated-escalation",
+  "version": "1.0.0",
+  "description": "Simulated approval workflow for procurement, tier 3 escalation, and controlled closure.",
+  "nodes": [
+    {
+      "id": "approval-request",
+      "type": "n8n-nodes-base.webhook",
+      "name": "Approval Request Trigger",
+      "parameters": {
+        "path": "approvals/request",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "id": "policy-check",
+      "type": "n8n-nodes-base.if",
+      "name": "Policy Check",
+      "parameters": {
+        "conditions": "approvalType in [PROCUREMENT, TIER3_ESCALATION, PRIORITY_CLOSURE]"
+      }
+    },
+    {
+      "id": "notify-approver",
+      "type": "n8n-nodes-base.emailSend",
+      "name": "Notify Approver",
+      "parameters": {
+        "subject": "Approval needed for MSP service desk action"
+      }
+    },
+    {
+      "id": "decision-capture",
+      "type": "n8n-nodes-base.formTrigger",
+      "name": "Capture Decision",
+      "parameters": {
+        "formTitle": "Approval Decision"
+      }
+    },
+    {
+      "id": "ticket-update",
+      "type": "n8n-nodes-base.sqlite",
+      "name": "Update Ticket State",
+      "parameters": {
+        "operation": "update",
+        "table": "Ticket"
+      }
+    },
+    {
+      "id": "audit-log",
+      "type": "n8n-nodes-base.sqlite",
+      "name": "Write Audit Event",
+      "parameters": {
+        "operation": "insert",
+        "table": "AuditEvent"
+      }
+    }
+  ],
+  "connections": {
+    "Approval Request Trigger": {
+      "main": [[{ "node": "Policy Check", "type": "main", "index": 0 }]]
+    },
+    "Policy Check": {
+      "main": [[{ "node": "Notify Approver", "type": "main", "index": 0 }]]
+    },
+    "Notify Approver": {
+      "main": [[{ "node": "Capture Decision", "type": "main", "index": 0 }]]
+    },
+    "Capture Decision": {
+      "main": [
+        [{ "node": "Update Ticket State", "type": "main", "index": 0 }],
+        [{ "node": "Write Audit Event", "type": "main", "index": 0 }]
+      ]
+    }
+  }
+}

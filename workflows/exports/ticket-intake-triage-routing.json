@@ -1,0 +1,102 @@
+{
+  "name": "ticket-intake-triage-routing",
+  "version": "1.0.0",
+  "description": "Simulated n8n workflow for MSP ticket intake, triage, SLA assignment, and technician assist outputs.",
+  "nodes": [
+    {
+      "id": "webhook-intake",
+      "type": "n8n-nodes-base.webhook",
+      "name": "Inbound Ticket Webhook",
+      "parameters": {
+        "path": "tickets/intake",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "id": "normalize-payload",
+      "type": "n8n-nodes-base.code",
+      "name": "Normalize Payload",
+      "parameters": {
+        "language": "javascript",
+        "code": "return items.map(item => ({ json: { ...item.json, normalized: true } }));"
+      }
+    },
+    {
+      "id": "rule-engine",
+      "type": "n8n-nodes-base.code",
+      "name": "Rule-Based Triage",
+      "parameters": {
+        "language": "javascript",
+        "code": "Assign category, queue, and baseline priority from issue type, urgency, and impact."
+      }
+    },
+    {
+      "id": "mock-ai",
+      "type": "n8n-nodes-base.openAi",
+      "name": "AI Recommendation Layer",
+      "parameters": {
+        "operation": "chat",
+        "model": "mock-ai-provider",
+        "prompt": "Suggest queue, risk posture, customer tone, and escalation hints."
+      }
+    },
+    {
+      "id": "sla-router",
+      "type": "n8n-nodes-base.if",
+      "name": "Assign SLA Profile",
+      "parameters": {
+        "conditions": "priority + issue type => SLA profile"
+      }
+    },
+    {
+      "id": "db-write",
+      "type": "n8n-nodes-base.sqlite",
+      "name": "Persist Ticket",
+      "parameters": {
+        "operation": "insert",
+        "table": "Ticket"
+      }
+    },
+    {
+      "id": "create-note",
+      "type": "n8n-nodes-base.code",
+      "name": "Create Internal Summary",
+      "parameters": {
+        "language": "javascript",
+        "code": "Build probable root cause, recommended next step, and escalation guidance."
+      }
+    },
+    {
+      "id": "draft-update",
+      "type": "n8n-nodes-base.code",
+      "name": "Draft Customer Update",
+      "parameters": {
+        "language": "javascript",
+        "code": "Create a concise customer-facing status update and hold for technician review."
+      }
+    }
+  ],
+  "connections": {
+    "Inbound Ticket Webhook": {
+      "main": [[{ "node": "Normalize Payload", "type": "main", "index": 0 }]]
+    },
+    "Normalize Payload": {
+      "main": [[{ "node": "Rule-Based Triage", "type": "main", "index": 0 }]]
+    },
+    "Rule-Based Triage": {
+      "main": [[{ "node": "AI Recommendation Layer", "type": "main", "index": 0 }]]
+    },
+    "AI Recommendation Layer": {
+      "main": [[{ "node": "Assign SLA Profile", "type": "main", "index": 0 }]]
+    },
+    "Assign SLA Profile": {
+      "main": [[{ "node": "Persist Ticket", "type": "main", "index": 0 }]]
+    },
+    "Persist Ticket": {
+      "main": [
+        [{ "node": "Create Internal Summary", "type": "main", "index": 0 }],
+        [{ "node": "Draft Customer Update", "type": "main", "index": 0 }]
+      ]
+    }
+  }
+}

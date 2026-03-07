@@ -1,0 +1,312 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum SlaTier {
+  PLATINUM
+  GOLD
+  SILVER
+  BRONZE
+}
+
+enum TicketStatus {
+  NEW
+  TRIAGED
+  IN_PROGRESS
+  WAITING_CUSTOMER
+  WAITING_VENDOR
+  ESCALATED
+  RESOLVED
+  CLOSED
+}
+
+enum IssueType {
+  PASSWORD_RESET
+  MFA_ISSUE
+  PRINTER_PROBLEM
+  USER_ONBOARDING
+  PROCUREMENT_REQUEST
+  INTERNET_OUTAGE
+  EMAIL_DELIVERY
+  VPN_ACCESS
+  LOB_APPLICATION
+  SECURITY_ESCALATION
+}
+
+enum TicketCategory {
+  IDENTITY_ACCESS
+  END_USER_SUPPORT
+  COLLABORATION
+  NETWORK
+  PROCUREMENT
+  BUSINESS_APPLICATION
+  SECURITY
+}
+
+enum Priority {
+  P1_CRITICAL
+  P2_HIGH
+  P3_MEDIUM
+  P4_LOW
+}
+
+enum Urgency {
+  CRITICAL
+  HIGH
+  NORMAL
+  LOW
+}
+
+enum Impact {
+  ENTERPRISE
+  DEPARTMENT
+  SINGLE_USER
+}
+
+enum Sentiment {
+  CALM
+  FRUSTRATED
+  EXECUTIVE
+  ESCALATION_RISK
+}
+
+enum RiskLevel {
+  LOW
+  MODERATE
+  HIGH
+  CRITICAL
+}
+
+enum SupportQueue {
+  SERVICE_DESK
+  IDENTITY
+  NETWORK
+  COLLABORATION
+  FIELD_SERVICES
+  PROCUREMENT
+  SECURITY
+  TIER3_APPLICATIONS
+}
+
+enum ApprovalType {
+  PROCUREMENT
+  TIER3_ESCALATION
+  PRIORITY_CLOSURE
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum WorkflowTrigger {
+  INTAKE
+  TRIAGE
+  SLA_ROUTING
+  INTERNAL_NOTE
+  CUSTOMER_UPDATE
+  APPROVAL_GATE
+  MANUAL_ACTION
+  REPORTING
+}
+
+enum WorkflowStatus {
+  COMPLETED
+  PENDING_APPROVAL
+  FAILED
+  REVIEW_REQUIRED
+}
+
+enum AutomationSource {
+  RULE_BASED
+  AI_ASSISTED
+  HUMAN_APPROVED
+  MANUAL
+}
+
+enum ActorType {
+  SYSTEM
+  TECHNICIAN
+  APPROVER
+  REQUESTER
+}
+
+model Company {
+  id         String      @id @default(cuid())
+  name       String      @unique
+  vertical   String
+  slaTier    SlaTier
+  createdAt  DateTime    @default(now())
+  requesters Requester[]
+  tickets    Ticket[]
+}
+
+model Requester {
+  id        String    @id @default(cuid())
+  name      String
+  title     String
+  email     String
+  vip       Boolean   @default(false)
+  companyId String
+  createdAt DateTime  @default(now())
+  company   Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  tickets   Ticket[]
+
+  @@index([companyId])
+  @@unique([companyId, email])
+}
+
+model TicketSequence {
+  year      Int      @id
+  nextValue Int      @default(2)
+  updatedAt DateTime @updatedAt
+}
+
+model SlaProfile {
+  id                      String    @id @default(cuid())
+  name                    String
+  priority                Priority
+  issueType               IssueType?
+  responseTargetMinutes   Int
+  resolutionTargetMinutes Int
+  escalationPolicy        String
+  createdAt               DateTime  @default(now())
+  tickets                 Ticket[]
+
+  @@index([priority])
+  @@index([issueType])
+}
+
+model Ticket {
+  id                       String          @id @default(cuid())
+  ticketNumber             String          @unique
+  subject                  String
+  issueType                IssueType
+  urgency                  Urgency
+  impact                   Impact
+  description              String
+  status                   TicketStatus    @default(NEW)
+  category                 TicketCategory?
+  priority                 Priority?
+  sentiment                Sentiment?
+  riskLevel                RiskLevel?
+  suggestedQueue           SupportQueue?
+  ruleCategory             TicketCategory?
+  rulePriority             Priority?
+  ruleQueue                SupportQueue?
+  aiSuggestedCategory      TicketCategory?
+  aiSuggestedPriority      Priority?
+  aiSuggestedQueue         SupportQueue?
+  aiConfidence             Float?
+  triageReasoning          String?
+  dueResponseAt            DateTime?
+  dueResolutionAt          DateTime?
+  internalSummary          String?
+  probableRootCause        String?
+  recommendedNextStep      String?
+  escalationSuggestion     String?
+  customerUpdateDraft      String?
+  customerUpdateReviewedAt DateTime?
+  customerUpdateReviewedBy String?
+  attachmentsNote          String?
+  manualMinutesSaved       Int             @default(0)
+  companyId                String
+  requesterId              String
+  slaProfileId             String?
+  createdAt                DateTime        @default(now())
+  updatedAt                DateTime        @default(now())
+  company                  Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  requester                Requester       @relation(fields: [requesterId], references: [id], onDelete: Cascade)
+  slaProfile               SlaProfile?     @relation(fields: [slaProfileId], references: [id])
+  approvals                Approval[]
+  attachments              TicketAttachment[]
+  auditEvents              AuditEvent[]
+  workflowRuns             WorkflowRun[]
+
+  @@index([companyId])
+  @@index([requesterId])
+  @@index([status])
+  @@index([priority])
+  @@index([category])
+  @@index([suggestedQueue])
+}
+
+model TicketAttachment {
+  id          String   @id @default(cuid())
+  fileName    String
+  description String?
+  createdAt   DateTime @default(now())
+  ticketId    String
+  ticket      Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  @@index([ticketId])
+}
+
+model WorkflowRun {
+  id                     String           @id @default(cuid())
+  workflowName           String
+  triggerType            WorkflowTrigger
+  status                 WorkflowStatus
+  source                 AutomationSource
+  summary                String
+  automationMinutesSaved Int              @default(0)
+  startedAt              DateTime         @default(now())
+  completedAt            DateTime?
+  ticketId               String
+  ticket                 Ticket           @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  @@index([ticketId])
+  @@index([triggerType])
+}
+
+model Approval {
+  id            String         @id @default(cuid())
+  approvalType  ApprovalType
+  status        ApprovalStatus @default(PENDING)
+  requestedBy   String
+  approverName  String?
+  requestedAt   DateTime       @default(now())
+  decidedAt     DateTime?
+  reason        String
+  decisionNotes String?
+  ticketId      String
+  ticket        Ticket         @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  @@index([ticketId])
+  @@index([status])
+}
+
+model AuditEvent {
+  id        String           @id @default(cuid())
+  action    String
+  details   String
+  source    AutomationSource
+  actorType ActorType
+  actorName String
+  createdAt DateTime         @default(now())
+  ticketId  String
+  ticket    Ticket           @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  @@index([ticketId])
+  @@index([createdAt])
+}
+
+model AutomationOpportunity {
+  id                         String         @id @default(cuid())
+  category                   TicketCategory @unique
+  monthlyTicketVolume        Int
+  automationFitScore         Int
+  estimatedMonthlyHoursSaved Int
+  requiresHumanApproval      Boolean
+  guardrails                 String
+  recommendedPlaybook        String
+  rationale                  String
+  createdAt                  DateTime       @default(now())
+  updatedAt                  DateTime       @updatedAt
+}
