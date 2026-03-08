@@ -65,8 +65,8 @@ export function TicketDetailPanel({ ticket }: { ticket: TicketDetail }) {
           </div>
 
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-              <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+            <div className="min-w-0 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <div className="truncate text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
                 Requester
               </div>
               <div className="mt-2 text-sm font-medium text-slate-900">
@@ -76,8 +76,8 @@ export function TicketDetailPanel({ ticket }: { ticket: TicketDetail }) {
                 {ticket.requester.title} · {ticket.company.name}
               </div>
             </div>
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-              <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+            <div className="min-w-0 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <div className="truncate text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
                 Classification
               </div>
               <div className="mt-2 text-sm font-medium text-slate-900">
@@ -88,8 +88,8 @@ export function TicketDetailPanel({ ticket }: { ticket: TicketDetail }) {
                 {queueLabels[ticket.suggestedQueue ?? ""] ?? "Pending"}
               </div>
             </div>
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-              <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+            <div className="min-w-0 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <div className="truncate text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
                 Timing
               </div>
               <div className="mt-2 text-sm font-medium text-slate-900">
@@ -97,8 +97,8 @@ export function TicketDetailPanel({ ticket }: { ticket: TicketDetail }) {
               </div>
               <div className="text-sm text-slate-600">{formatDateTime(ticket.createdAt)}</div>
             </div>
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-              <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+            <div className="min-w-0 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <div className="truncate text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
                 Automation
               </div>
               <div className="mt-2 text-sm font-medium text-slate-900">
