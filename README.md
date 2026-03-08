@@ -1,10 +1,63 @@
 # MSP Service Desk Automation Hub
 
-An internal-tool style demo platform that shows how an MSP can automate service desk operations with AI-assisted workflows, deterministic business logic, approval gates, and operational reporting.
+AI-assisted service desk automation platform demonstrating triage, SLA routing, approval workflows, and operational analytics.
 
-This project is built as a public GitHub portfolio piece for AI Automation Engineer, Automation Engineer, and Solutions Engineer roles. The goal is not to mimic a chatbot. The goal is to demonstrate believable service operations thinking.
+This project simulates how an MSP can blend deterministic service desk logic with AI-assisted triage, note generation, customer communication, approval gates, and operational reporting. Built as a portfolio piece for AI Automation Engineer, Automation Engineer, and Solutions Engineer roles.
 
-Portfolio focus: AI-assisted service desk automation, workflow orchestration, operational guardrails, and measurable business impact inside an MSP environment.
+![Demo walkthrough](docs/demo.gif)
+
+## Screenshots
+
+![Dashboard overview](docs/screenshots/dashboard.png)
+
+![Queue workbench and ticket detail](docs/screenshots/tickets-workbench.png)
+
+![Approvals center](docs/screenshots/approvals-center.png)
+
+![Automation opportunities](docs/screenshots/automation-opportunities.png)
+
+## Key Features
+
+- Ticket intake screen with requester, company, issue type, urgency, impact, description, and attachment placeholder fields
+- Triage engine that shows rule-based routing and AI-assisted recommendations side by side
+- SLA routing based on priority and issue type, with visible response and resolution targets
+- AI-generated technician notes including probable root cause, next step, and escalation guidance
+- AI-generated customer update drafts with explicit human review before send
+- Approval workflow simulation for procurement, tier 3 escalation, and controlled closure
+- Workflow history and audit trail for rule-based, AI-assisted, human-approved, and manual actions
+- Metrics dashboard with realistic seeded data and reporting
+- Automation opportunities page that frames recurring ticket patterns as a strategic automation backlog
+- Mock workflow exports that resemble how the same flow could be modeled in n8n
+
+## Architecture
+
+![System architecture](docs/system-architecture.png)
+
+1. A user submits or reviews tickets in the Next.js UI.
+2. Server Actions and API routes call the service desk automation layer.
+3. The automation layer applies deterministic triage rules, mock AI recommendations, SLA assignment, and approval logic.
+4. Prisma persists tickets, workflow runs, approvals, and audit events to SQLite.
+5. Dashboard and strategic reporting views aggregate the same operational dataset.
+
+Related docs:
+
+- [Project Overview](docs/project-overview.md)
+- [Feature Breakdown](docs/feature-breakdown.md)
+- [Workflow Design Notes](docs/workflow-design-notes.md)
+- [Business Impact Rationale](docs/business-impact-rationale.md)
+- [Future Improvements](docs/future-improvements.md)
+
+## Tech Stack
+
+- Next.js 16
+- TypeScript
+- Tailwind CSS 4
+- Prisma ORM
+- SQLite
+- Recharts
+- Zod
+- Playwright
+- Mock AI provider abstraction
 
 ## Why This Project Matters
 
@@ -20,83 +73,6 @@ This repository focuses on where automation is actually valuable inside an MSP:
 - turning ticket data into operational and strategic reporting
 
 It is meant to look like something a hiring manager could imagine inside a real service desk.
-
-## Problem Being Solved
-
-MSP service desks lose time and consistency in the same places over and over:
-
-- incomplete intake data
-- inconsistent ticket prioritization
-- delayed routing to the right queue
-- repetitive note and status update drafting
-- weak approval visibility for procurement or escalation actions
-- limited insight into which ticket patterns are worth automating next
-
-This project shows a pragmatic answer: combine deterministic workflow rules with AI-assisted drafting and recommendations, while keeping human review where it matters.
-
-## Key Features
-
-- Ticket intake screen with requester, company, issue type, urgency, impact, description, and attachment placeholder fields
-- Triage engine that shows rule-based routing and AI-assisted recommendations side by side
-- SLA routing based on priority and issue type, with visible response and resolution targets
-- AI-generated technician notes including probable root cause, next step, and escalation guidance
-- AI-generated customer update drafts with explicit human review before send
-- Approval workflow simulation for procurement, tier 3 escalation, and controlled closure
-- Workflow history and audit trail for rule-based, AI-assisted, human-approved, and manual actions
-- Metrics dashboard with realistic seeded data and reporting
-- Automation opportunities page that frames recurring ticket patterns as a strategic automation backlog
-- Mock workflow exports that resemble how the same flow could be modeled in n8n
-
-## Architecture Overview
-
-High level flow:
-
-1. A user submits or reviews tickets in the Next.js UI.
-2. Server Actions and API routes call the service desk automation layer.
-3. The automation layer applies deterministic triage rules, mock AI recommendations, SLA assignment, and approval logic.
-4. Prisma persists tickets, workflow runs, approvals, and audit events to SQLite.
-5. Dashboard and strategic reporting views aggregate the same operational dataset for demos and screenshots.
-
-Architecture diagram:
-
-- [System Architecture](docs/architecture-diagram.md)
-
-Related docs:
-
-- [Project Overview](docs/project-overview.md)
-- [Feature Breakdown](docs/feature-breakdown.md)
-- [Workflow Design Notes](docs/workflow-design-notes.md)
-- [Business Impact Rationale](docs/business-impact-rationale.md)
-- [Future Improvements](docs/future-improvements.md)
-- [Resume Bullet Ideas](docs/resume-bullet-ideas.md)
-
-## Tech Stack
-
-- Next.js 16
-- TypeScript
-- Tailwind CSS 4
-- Prisma ORM
-- SQLite
-- Recharts
-- Zod
-- Playwright
-- Mock AI provider abstraction
-
-## Screenshots
-
-Current product screenshots are included below and can be refreshed locally with the seeded dataset.
-
-![Dashboard overview](docs/screenshots/dashboard.png)
-
-![Queue workbench](docs/screenshots/tickets-workbench.png)
-
-![Approvals center](docs/screenshots/approvals-center.png)
-
-![Automation opportunities](docs/screenshots/automation-opportunities.png)
-
-Screenshot instructions:
-
-- [Screenshot Capture Notes](docs/screenshots/README.md)
 
 ## Local Setup
 
