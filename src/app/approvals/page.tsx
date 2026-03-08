@@ -22,14 +22,14 @@ export default async function ApprovalsPage() {
 
   return (
     <div className="grid gap-5">
-      <section className="rounded-3xl border border-white/70 bg-white/80 p-6 shadow-[0_20px_50px_-34px_rgba(15,23,42,0.45)] backdrop-blur">
+      <section className="rounded-3xl border border-white/8 bg-[#1e1e2a] p-6 shadow-[0_20px_50px_-34px_rgba(0,0,0,0.7)] backdrop-blur">
         <div className="space-y-4">
           <Badge tone="amber">Approval Control Center</Badge>
           <div>
-            <h2 className="font-display text-4xl font-semibold tracking-tight text-slate-950">
+            <h2 className="font-display text-4xl font-semibold tracking-tight text-[#f1f1f4]">
               Human approvals protect sensitive actions without blocking the automation story
             </h2>
-            <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
+            <p className="mt-3 max-w-3xl text-sm leading-7 text-[#8b8ba0]">
               Procurement, tier 3 escalation, and controlled closure decisions are surfaced here with enough
               ticket context to support a real operational approval workflow.
             </p>
@@ -39,33 +39,33 @@ export default async function ApprovalsPage() {
 
       <div className="grid gap-5 sm:grid-cols-3">
         <SectionCard>
-          <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+          <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#5f5f78]">
             Pending Approvals
           </div>
-          <div className="mt-2 text-3xl font-semibold text-slate-950">{pending.length}</div>
-          <p className="mt-2 text-sm text-slate-600">
+          <div className="mt-2 text-3xl font-semibold text-[#f1f1f4]">{pending.length}</div>
+          <p className="mt-2 text-sm text-[#8b8ba0]">
             Actions waiting on an operations lead, service manager, or budget owner.
           </p>
         </SectionCard>
         <SectionCard>
-          <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+          <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#5f5f78]">
             Approved Decisions
           </div>
-          <div className="mt-2 text-3xl font-semibold text-slate-950">
+          <div className="mt-2 text-3xl font-semibold text-[#f1f1f4]">
             {decided.filter((approval) => approval.status === "APPROVED").length}
           </div>
-          <p className="mt-2 text-sm text-slate-600">
+          <p className="mt-2 text-sm text-[#8b8ba0]">
             Sensitive actions cleared by an authorized approver with recorded notes.
           </p>
         </SectionCard>
         <SectionCard>
-          <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+          <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#5f5f78]">
             Rejected Decisions
           </div>
-          <div className="mt-2 text-3xl font-semibold text-slate-950">
+          <div className="mt-2 text-3xl font-semibold text-[#f1f1f4]">
             {decided.filter((approval) => approval.status === "REJECTED").length}
           </div>
-          <p className="mt-2 text-sm text-slate-600">
+          <p className="mt-2 text-sm text-[#8b8ba0]">
             Requests denied with documented rationale for audit visibility.
           </p>
         </SectionCard>
@@ -86,7 +86,7 @@ export default async function ApprovalsPage() {
               {pending.map((approval) => (
                 <div
                   key={approval.id}
-                  className="rounded-3xl border border-slate-200 bg-slate-50 p-5"
+                  className="rounded-3xl border border-white/6 bg-[#262635] p-5"
                   data-testid="pending-approval-card"
                 >
                   <div className="flex flex-wrap items-center gap-2">
@@ -98,15 +98,15 @@ export default async function ApprovalsPage() {
                     </Badge>
                   </div>
                   <div className="mt-4 space-y-2">
-                    <h3 className="text-lg font-semibold text-slate-950">
+                    <h3 className="text-lg font-semibold text-[#f1f1f4]">
                       {approval.ticket.ticketNumber} · {approval.ticket.subject}
                     </h3>
-                    <p className="text-sm text-slate-600">
+                    <p className="text-sm text-[#8b8ba0]">
                       {approval.ticket.company.name} ·{" "}
                       {categoryLabels[approval.ticket.category ?? ""] ?? "Pending"}
                     </p>
                   </div>
-                  <div className="mt-4 grid gap-3 rounded-2xl border border-slate-200 bg-white p-4 text-sm text-slate-700">
+                  <div className="mt-4 grid gap-3 rounded-2xl border border-white/6 bg-[#1e1e2a] p-4 text-sm text-[#8b8ba0]">
                     <div className="flex items-center justify-between gap-4">
                       <span>Priority</span>
                       <Badge tone={getPriorityTone(approval.ticket.priority)}>
@@ -120,10 +120,10 @@ export default async function ApprovalsPage() {
                       </span>
                     </div>
                     <div>
-                      <div className="font-medium text-slate-900">Reason</div>
-                      <div className="mt-1 leading-6 text-slate-600">{approval.reason}</div>
+                      <div className="font-medium text-[#f1f1f4]">Reason</div>
+                      <div className="mt-1 leading-6 text-[#8b8ba0]">{approval.reason}</div>
                     </div>
-                    <div className="text-slate-500">
+                    <div className="text-[#5f5f78]">
                       Requested by {approval.requestedBy} · {formatDateTime(approval.requestedAt)}
                     </div>
                   </div>
@@ -146,17 +146,17 @@ export default async function ApprovalsPage() {
             {decided.map((approval) => (
               <div
                 key={approval.id}
-                className="grid gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 md:grid-cols-[1fr_auto]"
+                className="grid gap-3 rounded-2xl border border-white/6 bg-[#262635] p-4 md:grid-cols-[1fr_auto]"
                 data-testid="decision-history-row"
               >
                 <div>
-                  <div className="font-medium text-slate-950">
+                  <div className="font-medium text-[#f1f1f4]">
                     {approval.ticket.ticketNumber} · {approval.ticket.subject}
                   </div>
-                  <div className="mt-1 text-sm text-slate-600">
+                  <div className="mt-1 text-sm text-[#8b8ba0]">
                     {approvalTypeLabels[approval.approvalType]} · {approval.ticket.company.name}
                   </div>
-                  <div className="mt-2 text-sm leading-6 text-slate-600">
+                  <div className="mt-2 text-sm leading-6 text-[#8b8ba0]">
                     {approval.approverName} {approval.status.toLowerCase()} this request.{" "}
                     {approval.decisionNotes}
                   </div>
