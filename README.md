@@ -79,6 +79,7 @@ Related docs:
 - SQLite
 - Recharts
 - Zod
+- Playwright
 - Mock AI provider abstraction
 
 ## Screenshots
@@ -127,6 +128,22 @@ npm test
 ```
 
 Unit tests cover the triage engine (priority derivation, sentiment inference, risk calculation, SLA selection, and full automation bundle assembly). Integration tests walk through a complete procurement lifecycle: ticket creation, customer update review, approval decision, and state transition verification with audit trail checks.
+
+### Run Browser E2E Tests
+
+Install the Chromium browser once:
+
+```bash
+npx playwright install chromium
+```
+
+Then run the browser tests:
+
+```bash
+npm run test:e2e
+```
+
+The Playwright suite uses an isolated SQLite database, seeds fresh demo data automatically, starts the app on port `3001`, and verifies the core browser flows for ticket intake and approval handling.
 
 ## Seeded Demo Data
 
