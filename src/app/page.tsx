@@ -33,15 +33,15 @@ export default async function Home() {
 
   return (
     <div className="grid gap-5">
-      <section className="overflow-hidden rounded-[2rem] border border-white/70 bg-[radial-gradient(circle_at_top_left,#d5f1eb_0%,#f8fbfc_42%,#ffffff_100%)] p-6 shadow-[0_20px_60px_-34px_rgba(15,23,42,0.45)]">
+      <section className="overflow-hidden rounded-[2rem] border border-white/8 bg-[#1e1e2a] p-6 shadow-[0_20px_60px_-34px_rgba(0,0,0,0.7)]">
         <div className="grid gap-8 xl:grid-cols-[1.1fr_0.9fr]">
           <div className="space-y-5">
             <Badge tone="teal">AI-Assisted Operations Control Plane</Badge>
             <div>
-              <h2 className="font-display text-4xl font-semibold tracking-tight text-slate-950 sm:text-5xl">
+              <h2 className="font-display text-4xl font-semibold tracking-tight text-[#f1f1f4] sm:text-5xl">
                 Practical MSP workflow automation with clear human control points
               </h2>
-              <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-600">
+              <p className="mt-4 max-w-3xl text-sm leading-7 text-[#8b8ba0]">
                 This demo simulates how an MSP can blend deterministic service desk logic with AI-assisted
                 triage, note generation, customer communication, approval gates, and operational reporting.
               </p>
@@ -59,47 +59,47 @@ export default async function Home() {
             </div>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="rounded-3xl border border-white/80 bg-white/80 p-5 backdrop-blur">
-              <div className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+            <div className="rounded-3xl border border-white/8 bg-[#1e1e2a] p-5 backdrop-blur">
+              <div className="text-xs font-semibold uppercase tracking-[0.2em] text-[#5f5f78]">
                 Auto-Triage Coverage
               </div>
-              <div className="mt-2 text-3xl font-semibold text-slate-950">
+              <div className="mt-2 text-3xl font-semibold text-[#f1f1f4]">
                 {formatPercent(dashboard.totals.autoTriageRate)}
               </div>
-              <p className="mt-2 text-sm leading-6 text-slate-600">
+              <p className="mt-2 text-sm leading-6 text-[#8b8ba0]">
                 Every seeded ticket includes a rule-based decision path and an AI-assisted recommendation layer.
               </p>
             </div>
-            <div className="rounded-3xl border border-white/80 bg-white/80 p-5 backdrop-blur">
-              <div className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+            <div className="rounded-3xl border border-white/8 bg-[#1e1e2a] p-5 backdrop-blur">
+              <div className="text-xs font-semibold uppercase tracking-[0.2em] text-[#5f5f78]">
                 Manual Time Saved
               </div>
-              <div className="mt-2 text-3xl font-semibold text-slate-950">
+              <div className="mt-2 text-3xl font-semibold text-[#f1f1f4]">
                 {formatMinutes(dashboard.totals.manualMinutesSaved)}
               </div>
-              <p className="mt-2 text-sm leading-6 text-slate-600">
+              <p className="mt-2 text-sm leading-6 text-[#8b8ba0]">
                 Estimated technician time reduced through automated triage, notes, and customer draft generation.
               </p>
             </div>
-            <div className="rounded-3xl border border-white/80 bg-white/80 p-5 backdrop-blur">
-              <div className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+            <div className="rounded-3xl border border-white/8 bg-[#1e1e2a] p-5 backdrop-blur">
+              <div className="text-xs font-semibold uppercase tracking-[0.2em] text-[#5f5f78]">
                 Pending Approvals
               </div>
-              <div className="mt-2 text-3xl font-semibold text-slate-950">
+              <div className="mt-2 text-3xl font-semibold text-[#f1f1f4]">
                 {dashboard.totals.pendingApprovals}
               </div>
-              <p className="mt-2 text-sm leading-6 text-slate-600">
+              <p className="mt-2 text-sm leading-6 text-[#8b8ba0]">
                 Sensitive actions stay visible and blocked until a human approver records a decision.
               </p>
             </div>
-            <div className="rounded-3xl border border-white/80 bg-white/80 p-5 backdrop-blur">
-              <div className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+            <div className="rounded-3xl border border-white/8 bg-[#1e1e2a] p-5 backdrop-blur">
+              <div className="text-xs font-semibold uppercase tracking-[0.2em] text-[#5f5f78]">
                 SLA Compliance
               </div>
-              <div className="mt-2 text-3xl font-semibold text-slate-950">
+              <div className="mt-2 text-3xl font-semibold text-[#f1f1f4]">
                 {formatPercent(dashboard.totals.slaCompliance)}
               </div>
-              <p className="mt-2 text-sm leading-6 text-slate-600">
+              <p className="mt-2 text-sm leading-6 text-[#8b8ba0]">
                 Resolution posture is calculated from actual seeded deadlines, open risk, and historical closures.
               </p>
             </div>
@@ -167,16 +167,16 @@ export default async function Home() {
             {dashboard.recentTickets.map((ticket) => (
               <div
                 key={ticket.id}
-                className="grid gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 md:grid-cols-[1.2fr_0.8fr_auto]"
+                className="grid gap-3 rounded-2xl border border-white/6 bg-[#262635] p-4 md:grid-cols-[1.2fr_0.8fr_auto]"
               >
                 <div>
-                  <div className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+                  <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[#5f5f78]">
                     {ticket.ticketNumber}
                   </div>
-                  <div className="mt-1 font-medium text-slate-950">{ticket.subject}</div>
-                  <div className="mt-1 text-sm text-slate-600">{ticket.company.name}</div>
+                  <div className="mt-1 font-medium text-[#f1f1f4]">{ticket.subject}</div>
+                  <div className="mt-1 text-sm text-[#8b8ba0]">{ticket.company.name}</div>
                 </div>
-                <div className="space-y-2 text-sm text-slate-700">
+                <div className="space-y-2 text-sm text-[#8b8ba0]">
                   <div>{queueLabels[ticket.suggestedQueue ?? ""] ?? "Pending queue"}</div>
                   <div>{formatDateTime(ticket.createdAt)}</div>
                 </div>
@@ -200,7 +200,7 @@ export default async function Home() {
           >
             <div className="space-y-3">
               {dashboard.highRiskTickets.map((ticket) => (
-                <div key={ticket.id} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <div key={ticket.id} className="rounded-2xl border border-white/6 bg-[#262635] p-4">
                   <div className="flex flex-wrap items-center gap-2">
                     <Badge tone={getPriorityTone(ticket.priority)}>
                       {priorityLabels[ticket.priority ?? ""] ?? "Pending"}
@@ -209,8 +209,8 @@ export default async function Home() {
                       {riskLevelLabels[ticket.riskLevel ?? ""] ?? "Pending"}
                     </Badge>
                   </div>
-                  <div className="mt-3 font-medium text-slate-950">{ticket.subject}</div>
-                  <div className="mt-1 text-sm text-slate-600">{ticket.company.name}</div>
+                  <div className="mt-3 font-medium text-[#f1f1f4]">{ticket.subject}</div>
+                  <div className="mt-1 text-sm text-[#8b8ba0]">{ticket.company.name}</div>
                 </div>
               ))}
             </div>
@@ -224,15 +224,15 @@ export default async function Home() {
               {dashboard.opportunityHighlights.map((opportunity) => (
                 <div
                   key={opportunity.id}
-                  className="rounded-2xl border border-slate-200 bg-slate-50 p-4"
+                  className="rounded-2xl border border-white/6 bg-[#262635] p-4"
                 >
                   <div className="flex items-center justify-between gap-3">
-                    <div className="font-medium text-slate-950">
+                    <div className="font-medium text-[#f1f1f4]">
                       {categoryLabels[opportunity.category]}
                     </div>
                     <Badge tone="teal">{opportunity.automationFitScore} fit score</Badge>
                   </div>
-                  <p className="mt-2 text-sm leading-6 text-slate-600">{opportunity.rationale}</p>
+                  <p className="mt-2 text-sm leading-6 text-[#8b8ba0]">{opportunity.rationale}</p>
                 </div>
               ))}
             </div>
