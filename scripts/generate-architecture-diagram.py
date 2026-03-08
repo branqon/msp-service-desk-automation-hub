@@ -1,6 +1,6 @@
 """
 Generate a polished system architecture diagram for the MSP Service Desk Automation Hub.
-Uses HTML/CSS rendered via Playwright screenshot.
+Uses HTML/CSS rendered via Playwright screenshot. Dark theme variant.
 """
 
 import os
@@ -22,7 +22,7 @@ HTML_CONTENT = r"""<!DOCTYPE html>
   body {
     width: 900px;
     height: 700px;
-    background: #eef4f7;
+    background: #13131a;
     font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     display: flex;
     flex-direction: column;
@@ -37,32 +37,42 @@ HTML_CONTENT = r"""<!DOCTYPE html>
   /* ── header band ── */
   .header {
     width: 100%;
-    background: linear-gradient(135deg, #0f766e 0%, #0d9488 50%, #14b8a6 100%);
+    background: linear-gradient(135deg, #1e1e2a 0%, #2a2548 40%, #312e81 100%);
     padding: 22px 0 18px;
     text-align: center;
     position: relative;
     overflow: hidden;
+    border-bottom: 1px solid rgba(129,140,248,0.18);
   }
   .header::before {
     content: "";
     position: absolute;
     inset: 0;
     background:
-      radial-gradient(circle at 15% 50%, rgba(255,255,255,0.08) 0%, transparent 50%),
-      radial-gradient(circle at 85% 40%, rgba(255,255,255,0.06) 0%, transparent 45%);
+      radial-gradient(ellipse at 30% 80%, rgba(129,140,248,0.13) 0%, transparent 55%),
+      radial-gradient(ellipse at 75% 20%, rgba(167,139,250,0.10) 0%, transparent 50%);
+  }
+  .header::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(129,140,248,0.35), transparent);
   }
   .header h1 {
     font-size: 19px;
     font-weight: 700;
-    color: #fff;
+    color: #f1f1f4;
     letter-spacing: 0.5px;
     position: relative;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+    text-shadow: 0 1px 4px rgba(0,0,0,0.35);
   }
   .header .subtitle {
     font-size: 11.5px;
     font-weight: 400;
-    color: rgba(255,255,255,0.82);
+    color: rgba(139,139,160,0.9);
     margin-top: 3px;
     letter-spacing: 0.3px;
     position: relative;
@@ -73,24 +83,23 @@ HTML_CONTENT = r"""<!DOCTYPE html>
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 28px 0 20px;
+    padding: 24px 0 20px;
     gap: 0;
     flex: 1;
   }
 
   /* ── node card ── */
   .node {
-    width: 380px;
-    background: #fff;
-    border: 1px solid rgba(15,118,110,0.13);
+    width: 420px;
+    background: #1e1e2a;
+    border: 1px solid rgba(255,255,255,0.08);
     border-radius: 12px;
-    padding: 15px 24px;
+    padding: 14px 22px;
     text-align: center;
     position: relative;
     box-shadow:
-      0 1px 3px rgba(15,118,110,0.06),
-      0 4px 12px rgba(15,118,110,0.04);
-    transition: box-shadow 0.2s;
+      0 2px 8px rgba(0,0,0,0.35),
+      0 0 1px rgba(129,140,248,0.10);
     display: flex;
     align-items: center;
     gap: 14px;
@@ -98,14 +107,26 @@ HTML_CONTENT = r"""<!DOCTYPE html>
 
   .node .icon-box {
     flex-shrink: 0;
-    width: 38px;
-    height: 38px;
+    width: 40px;
+    height: 40px;
     border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 18px;
     color: #fff;
+    position: relative;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  }
+  /* glow behind icon */
+  .node .icon-box::after {
+    content: "";
+    position: absolute;
+    inset: -3px;
+    border-radius: 13px;
+    opacity: 0.25;
+    z-index: -1;
+    filter: blur(6px);
   }
 
   .node .text {
@@ -115,32 +136,65 @@ HTML_CONTENT = r"""<!DOCTYPE html>
   .node .label {
     font-size: 14.5px;
     font-weight: 650;
-    color: #1e293b;
+    color: #f1f1f4;
     line-height: 1.25;
   }
 
   .node .desc {
     font-size: 10.5px;
     font-weight: 400;
-    color: #64748b;
+    color: #8b8ba0;
     margin-top: 2px;
     line-height: 1.35;
   }
 
-  /* icon‑box colours per node */
-  .node:nth-child(1)  .icon-box { background: linear-gradient(135deg, #0f766e, #14b8a6); }
-  .node:nth-child(3)  .icon-box { background: linear-gradient(135deg, #7c3aed, #a78bfa); }
-  .node:nth-child(5)  .icon-box { background: linear-gradient(135deg, #2563eb, #60a5fa); }
-  .node:nth-child(7)  .icon-box { background: linear-gradient(135deg, #ea580c, #fb923c); }
-  .node:nth-child(9)  .icon-box { background: linear-gradient(135deg, #0369a1, #38bdf8); }
-  .node:nth-child(11) .icon-box { background: linear-gradient(135deg, #16a34a, #4ade80); }
+  /* ── inner badge detail chip ── */
+  .node .inner-surface {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: #262635;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 6px;
+    padding: 2px 8px;
+    font-size: 8.5px;
+    font-weight: 500;
+    color: #818cf8;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+  }
+
+  /* icon-box colours per node — indigo/violet/purple spectrum */
+  .node:nth-child(1) .icon-box  { background: linear-gradient(135deg, #6366f1, #818cf8); }
+  .node:nth-child(1) .icon-box::after { background: #6366f1; }
+  .node:nth-child(1) .inner-surface { color: #818cf8; }
+
+  .node:nth-child(3) .icon-box  { background: linear-gradient(135deg, #7c3aed, #a78bfa); }
+  .node:nth-child(3) .icon-box::after { background: #7c3aed; }
+  .node:nth-child(3) .inner-surface { color: #a78bfa; }
+
+  .node:nth-child(5) .icon-box  { background: linear-gradient(135deg, #4f46e5, #818cf8); }
+  .node:nth-child(5) .icon-box::after { background: #4f46e5; }
+  .node:nth-child(5) .inner-surface { color: #818cf8; }
+
+  .node:nth-child(7) .icon-box  { background: linear-gradient(135deg, #8b5cf6, #c4b5fd); }
+  .node:nth-child(7) .icon-box::after { background: #8b5cf6; }
+  .node:nth-child(7) .inner-surface { color: #c4b5fd; }
+
+  .node:nth-child(9) .icon-box  { background: linear-gradient(135deg, #6366f1, #a5b4fc); }
+  .node:nth-child(9) .icon-box::after { background: #6366f1; }
+  .node:nth-child(9) .inner-surface { color: #a5b4fc; }
+
+  .node:nth-child(11) .icon-box { background: linear-gradient(135deg, #7c3aed, #818cf8); }
+  .node:nth-child(11) .icon-box::after { background: #7c3aed; }
+  .node:nth-child(11) .inner-surface { color: #818cf8; }
 
   /* ── arrow connector ── */
   .arrow {
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 32px;
+    height: 28px;
     justify-content: center;
     position: relative;
   }
@@ -154,8 +208,28 @@ HTML_CONTENT = r"""<!DOCTYPE html>
     bottom: 10px;
     right: 18px;
     font-size: 9px;
-    color: rgba(100,116,139,0.45);
+    color: rgba(139,139,160,0.35);
     letter-spacing: 0.3px;
+  }
+
+  /* ── ambient glow on canvas ── */
+  body::before {
+    content: "";
+    position: absolute;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(99,102,241,0.04) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .flow, .header, .watermark {
+    position: relative;
+    z-index: 1;
   }
 </style>
 </head>
@@ -168,7 +242,7 @@ HTML_CONTENT = r"""<!DOCTYPE html>
 
 <div class="flow">
 
-  <!-- 1 ─ Ticket Intake UI -->
+  <!-- 1 - Ticket Intake UI -->
   <div class="node">
     <div class="icon-box">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -181,17 +255,18 @@ HTML_CONTENT = r"""<!DOCTYPE html>
       <div class="label">Ticket Intake UI</div>
       <div class="desc">Inbound requests, triage queue, priority tagging</div>
     </div>
+    <div class="inner-surface">Layer 1</div>
   </div>
 
   <!-- arrow -->
   <div class="arrow">
-    <svg width="16" height="32" viewBox="0 0 16 32">
-      <line x1="8" y1="0" x2="8" y2="24" stroke="#0f766e" stroke-width="2" stroke-dasharray="4 3" opacity="0.45"/>
-      <polygon points="3,22 8,30 13,22" fill="#0f766e" opacity="0.55"/>
+    <svg width="16" height="28" viewBox="0 0 16 28">
+      <line x1="8" y1="0" x2="8" y2="20" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <polygon points="4,18 8,26 12,18" fill="rgba(129,140,248,0.45)"/>
     </svg>
   </div>
 
-  <!-- 2 ─ Automation Layer -->
+  <!-- 2 - Automation Layer -->
   <div class="node">
     <div class="icon-box">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -206,17 +281,18 @@ HTML_CONTENT = r"""<!DOCTYPE html>
       <div class="label">Automation Layer</div>
       <div class="desc">Rule engine + AI-powered recommendation engine</div>
     </div>
+    <div class="inner-surface">Layer 2</div>
   </div>
 
   <!-- arrow -->
   <div class="arrow">
-    <svg width="16" height="32" viewBox="0 0 16 32">
-      <line x1="8" y1="0" x2="8" y2="24" stroke="#0f766e" stroke-width="2" stroke-dasharray="4 3" opacity="0.45"/>
-      <polygon points="3,22 8,30 13,22" fill="#0f766e" opacity="0.55"/>
+    <svg width="16" height="28" viewBox="0 0 16 28">
+      <line x1="8" y1="0" x2="8" y2="20" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <polygon points="4,18 8,26 12,18" fill="rgba(129,140,248,0.45)"/>
     </svg>
   </div>
 
-  <!-- 3 ─ SLA Router -->
+  <!-- 3 - SLA Router -->
   <div class="node">
     <div class="icon-box">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -228,17 +304,18 @@ HTML_CONTENT = r"""<!DOCTYPE html>
       <div class="label">SLA Router</div>
       <div class="desc">Priority-based routing, escalation timers, SLA enforcement</div>
     </div>
+    <div class="inner-surface">Layer 3</div>
   </div>
 
   <!-- arrow -->
   <div class="arrow">
-    <svg width="16" height="32" viewBox="0 0 16 32">
-      <line x1="8" y1="0" x2="8" y2="24" stroke="#0f766e" stroke-width="2" stroke-dasharray="4 3" opacity="0.45"/>
-      <polygon points="3,22 8,30 13,22" fill="#0f766e" opacity="0.55"/>
+    <svg width="16" height="28" viewBox="0 0 16 28">
+      <line x1="8" y1="0" x2="8" y2="20" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <polygon points="4,18 8,26 12,18" fill="rgba(129,140,248,0.45)"/>
     </svg>
   </div>
 
-  <!-- 4 ─ Approval Gate -->
+  <!-- 4 - Approval Gate -->
   <div class="node">
     <div class="icon-box">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -250,17 +327,18 @@ HTML_CONTENT = r"""<!DOCTYPE html>
       <div class="label">Approval Gate</div>
       <div class="desc">Manager review, policy checks, change approval workflow</div>
     </div>
+    <div class="inner-surface">Layer 4</div>
   </div>
 
   <!-- arrow -->
   <div class="arrow">
-    <svg width="16" height="32" viewBox="0 0 16 32">
-      <line x1="8" y1="0" x2="8" y2="24" stroke="#0f766e" stroke-width="2" stroke-dasharray="4 3" opacity="0.45"/>
-      <polygon points="3,22 8,30 13,22" fill="#0f766e" opacity="0.55"/>
+    <svg width="16" height="28" viewBox="0 0 16 28">
+      <line x1="8" y1="0" x2="8" y2="20" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <polygon points="4,18 8,26 12,18" fill="rgba(129,140,248,0.45)"/>
     </svg>
   </div>
 
-  <!-- 5 ─ Workflow History -->
+  <!-- 5 - Workflow History -->
   <div class="node">
     <div class="icon-box">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -274,17 +352,18 @@ HTML_CONTENT = r"""<!DOCTYPE html>
       <div class="label">Workflow History</div>
       <div class="desc">Audit trail, execution logs, status tracking</div>
     </div>
+    <div class="inner-surface">Layer 5</div>
   </div>
 
   <!-- arrow -->
   <div class="arrow">
-    <svg width="16" height="32" viewBox="0 0 16 32">
-      <line x1="8" y1="0" x2="8" y2="24" stroke="#0f766e" stroke-width="2" stroke-dasharray="4 3" opacity="0.45"/>
-      <polygon points="3,22 8,30 13,22" fill="#0f766e" opacity="0.55"/>
+    <svg width="16" height="28" viewBox="0 0 16 28">
+      <line x1="8" y1="0" x2="8" y2="20" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <polygon points="4,18 8,26 12,18" fill="rgba(129,140,248,0.45)"/>
     </svg>
   </div>
 
-  <!-- 6 ─ Metrics + Reporting -->
+  <!-- 6 - Metrics + Reporting -->
   <div class="node">
     <div class="icon-box">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -298,11 +377,12 @@ HTML_CONTENT = r"""<!DOCTYPE html>
       <div class="label">Metrics + Reporting</div>
       <div class="desc">KPI dashboards, SLA compliance, automation ROI</div>
     </div>
+    <div class="inner-surface">Layer 6</div>
   </div>
 
 </div>
 
-<div class="watermark">MSP Automation Hub &middot; Architecture v1.0</div>
+<div class="watermark">MSP Automation Hub &middot; Architecture v2.0</div>
 
 </body>
 </html>"""
