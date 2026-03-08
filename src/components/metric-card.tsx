@@ -32,7 +32,7 @@ export function MetricCard({
             </div>
           ) : null}
         </div>
-        <p className="text-sm leading-6 text-slate-600">{detail}</p>
+        <p className="flex-1 text-sm leading-6 text-slate-600">{detail}</p>
         {badge ? <Badge tone="teal">{badge}</Badge> : null}
       </div>
     </SectionCard>

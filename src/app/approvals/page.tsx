@@ -43,6 +43,9 @@ export default async function ApprovalsPage() {
             Pending Approvals
           </div>
           <div className="mt-2 text-3xl font-semibold text-slate-950">{pending.length}</div>
+          <p className="mt-2 text-sm text-slate-600">
+            Actions waiting on an operations lead, service manager, or budget owner.
+          </p>
         </SectionCard>
         <SectionCard>
           <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
@@ -51,6 +54,9 @@ export default async function ApprovalsPage() {
           <div className="mt-2 text-3xl font-semibold text-slate-950">
             {decided.filter((approval) => approval.status === "APPROVED").length}
           </div>
+          <p className="mt-2 text-sm text-slate-600">
+            Sensitive actions cleared by an authorized approver with recorded notes.
+          </p>
         </SectionCard>
         <SectionCard>
           <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
@@ -59,6 +65,9 @@ export default async function ApprovalsPage() {
           <div className="mt-2 text-3xl font-semibold text-slate-950">
             {decided.filter((approval) => approval.status === "REJECTED").length}
           </div>
+          <p className="mt-2 text-sm text-slate-600">
+            Requests denied with documented rationale for audit visibility.
+          </p>
         </SectionCard>
       </div>
 
