@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Activity, Bot, Clock3, ShieldCheck, Sparkles, TimerReset } from "lucide-react";
+import { Activity, Bot, Clock3, Inbox, ShieldCheck, TimerReset } from "lucide-react";
 
 import { DashboardCharts } from "@/components/charts/dashboard-charts";
 import { MetricCard } from "@/components/metric-card";
@@ -33,80 +33,6 @@ export default async function Home() {
 
   return (
     <div className="grid gap-5">
-      <section className="overflow-hidden rounded-[2rem] border border-white/8 bg-[#1e1e2a] p-6 shadow-[0_20px_60px_-34px_rgba(0,0,0,0.7)]">
-        <div className="grid gap-8 xl:grid-cols-[1.1fr_0.9fr]">
-          <div className="space-y-5">
-            <Badge tone="teal">AI-Assisted Operations Control Plane</Badge>
-            <div>
-              <h2 className="font-display text-4xl font-semibold tracking-tight text-[#f1f1f4] sm:text-5xl">
-                Practical MSP workflow automation with clear human control points
-              </h2>
-              <p className="mt-4 max-w-3xl text-sm leading-7 text-[#8b8ba0]">
-                This demo simulates how an MSP can blend deterministic service desk logic with AI-assisted
-                triage, note generation, customer communication, approval gates, and operational reporting.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              <Link href="/tickets" className={buttonStyles()}>
-                Open Queue Workbench
-              </Link>
-              <Link href="/tickets/new" className={buttonStyles({ variant: "secondary" })}>
-                Submit Intake Ticket
-              </Link>
-              <Link href="/automation-opportunities" className={buttonStyles({ variant: "ghost" })}>
-                Review Automation Candidates
-              </Link>
-            </div>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="rounded-3xl border border-white/8 bg-[#1e1e2a] p-5 backdrop-blur">
-              <div className="text-xs font-semibold uppercase tracking-[0.2em] text-[#5f5f78]">
-                Auto-Triage Coverage
-              </div>
-              <div className="mt-2 text-3xl font-semibold text-[#f1f1f4]">
-                {formatPercent(dashboard.totals.autoTriageRate)}
-              </div>
-              <p className="mt-2 text-sm leading-6 text-[#8b8ba0]">
-                Every seeded ticket includes a rule-based decision path and an AI-assisted recommendation layer.
-              </p>
-            </div>
-            <div className="rounded-3xl border border-white/8 bg-[#1e1e2a] p-5 backdrop-blur">
-              <div className="text-xs font-semibold uppercase tracking-[0.2em] text-[#5f5f78]">
-                Manual Time Saved
-              </div>
-              <div className="mt-2 text-3xl font-semibold text-[#f1f1f4]">
-                {formatMinutes(dashboard.totals.manualMinutesSaved)}
-              </div>
-              <p className="mt-2 text-sm leading-6 text-[#8b8ba0]">
-                Estimated technician time reduced through automated triage, notes, and customer draft generation.
-              </p>
-            </div>
-            <div className="rounded-3xl border border-white/8 bg-[#1e1e2a] p-5 backdrop-blur">
-              <div className="text-xs font-semibold uppercase tracking-[0.2em] text-[#5f5f78]">
-                Pending Approvals
-              </div>
-              <div className="mt-2 text-3xl font-semibold text-[#f1f1f4]">
-                {dashboard.totals.pendingApprovals}
-              </div>
-              <p className="mt-2 text-sm leading-6 text-[#8b8ba0]">
-                Sensitive actions stay visible and blocked until a human approver records a decision.
-              </p>
-            </div>
-            <div className="rounded-3xl border border-white/8 bg-[#1e1e2a] p-5 backdrop-blur">
-              <div className="text-xs font-semibold uppercase tracking-[0.2em] text-[#5f5f78]">
-                SLA Compliance
-              </div>
-              <div className="mt-2 text-3xl font-semibold text-[#f1f1f4]">
-                {formatPercent(dashboard.totals.slaCompliance)}
-              </div>
-              <p className="mt-2 text-sm leading-6 text-[#8b8ba0]">
-                Resolution posture is calculated from actual seeded deadlines, open risk, and historical closures.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
         <MetricCard
           label="Tickets Processed"
@@ -144,13 +70,35 @@ export default async function Home() {
           icon={<TimerReset className="h-5 w-5" />}
         />
         <MetricCard
-          label="Automation Candidates"
-          value={String(dashboard.totals.automationCandidates)}
-          detail="Categories with repeatability and guardrails strong enough to justify the next automation investment."
-          badge="Strategic backlog"
-          icon={<Sparkles className="h-5 w-5" />}
+          label="Pending Approvals"
+          value={String(dashboard.totals.pendingApprovals)}
+          detail="Sensitive actions waiting for human review before proceeding through the workflow."
+          badge="Approval gate"
+          icon={<Inbox className="h-5 w-5" />}
         />
       </div>
+
+      <section className="rounded-2xl border border-white/8 bg-[#1e1e2a] px-6 py-4">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <Badge tone="teal">AI-Assisted Operations</Badge>
+            <p className="text-sm text-[#8b8ba0]">
+              Deterministic service desk logic with AI-assisted triage, approval gates, and operational reporting.
+            </p>
+          </div>
+          <div className="flex flex-shrink-0 flex-wrap gap-3">
+            <Link href="/tickets" className={buttonStyles({ size: "sm" })}>
+              Open Queue Workbench
+            </Link>
+            <Link href="/tickets/new" className={buttonStyles({ variant: "secondary", size: "sm" })}>
+              Submit Intake Ticket
+            </Link>
+            <Link href="/automation-opportunities" className={buttonStyles({ variant: "ghost", size: "sm" })}>
+              Automation Candidates
+            </Link>
+          </div>
+        </div>
+      </section>
 
       <DashboardCharts
         ticketsByDay={dashboard.ticketsByDay}

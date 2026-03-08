@@ -1,5 +1,11 @@
 # Future Improvements
 
+## Current Tradeoffs
+
+- SQLite keeps local setup easy, but Postgres would be the more natural production option
+- The AI layer is mocked to keep the repo runnable without external credentials
+- Authentication is intentionally omitted so the repo stays easy to demo locally
+
 ## Near-Term
 
 - Add authentication and role-based access for dispatcher, technician, approver, and manager personas

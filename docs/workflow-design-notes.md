@@ -44,3 +44,14 @@ That matters because it allows:
 The dashboard and opportunity views are computed from the same seeded operational data rather than from hard-coded chart values.
 
 That makes the reporting layer credible in screenshots and easier to explain during interviews.
+
+## Workflow Artifacts
+
+Sample workflow definitions live in [`workflows/exports`](../workflows/exports):
+
+- `ticket-intake-triage-routing.json`
+- `approval-gated-escalation.json`
+- `customer-update-review-loop.json`
+- `daily-ops-reporting-rollup.json`
+
+These are mock exports, but they are structured to communicate how the product logic could be mapped into an automation platform.

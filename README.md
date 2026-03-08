@@ -1,8 +1,6 @@
 # MSP Service Desk Automation Hub
 
-AI-assisted service desk automation platform demonstrating triage, SLA routing, approval workflows, and operational analytics.
-
-This project simulates how an MSP can blend deterministic service desk logic with AI-assisted triage, note generation, customer communication, approval gates, and operational reporting. Built as a portfolio piece for AI Automation Engineer, Automation Engineer, and Solutions Engineer roles.
+AI-assisted service desk automation platform demonstrating triage, SLA routing, approval workflows, and operational analytics. Built to show how an MSP can blend deterministic service desk logic with AI-assisted triage, note generation, customer communication, and approval gates — reducing repetitive dispatcher and technician work while keeping sensitive actions human-approved and inspectable.
 
 ![Demo walkthrough](docs/demo.gif)
 
@@ -45,6 +43,7 @@ Related docs:
 - [Feature Breakdown](docs/feature-breakdown.md)
 - [Workflow Design Notes](docs/workflow-design-notes.md)
 - [Business Impact Rationale](docs/business-impact-rationale.md)
+- [Demo Walkthrough](docs/demo-walkthrough.md)
 - [Future Improvements](docs/future-improvements.md)
 
 ## Tech Stack
@@ -59,20 +58,16 @@ Related docs:
 - Playwright
 - Mock AI provider abstraction
 
-## Why This Project Matters
+## Demo Walkthrough
 
-Most AI portfolio projects stop at a prompt box or a generic agent demo. Service organizations do not run that way.
+1. Start on the dashboard and explain the KPI story: auto-triage rate, approvals, time saved, SLA compliance.
+2. Open the queue workbench and select a ticket that shows both rule-based and AI-assisted routing.
+3. Review the ticket detail panel: SLA, internal note, customer update draft, workflow history, and audit trail.
+4. Switch to the approvals page and show a pending approval plus a historical decision.
+5. Open the automation opportunities page and explain how the same operational data informs future automation investment.
+6. Submit a new intake ticket to show the workflow creating a fresh routed record.
 
-This repository focuses on where automation is actually valuable inside an MSP:
-
-- standardizing ticket intake
-- reducing triage time
-- improving routing and SLA consistency
-- drafting technician notes and customer updates
-- keeping sensitive actions human-approved
-- turning ticket data into operational and strategic reporting
-
-It is meant to look like something a hiring manager could imagine inside a real service desk.
+See [Demo Walkthrough](docs/demo-walkthrough.md) for a full example workflow lifecycle.
 
 ## Local Setup
 
@@ -121,86 +116,14 @@ npm run test:e2e
 
 The Playwright suite uses an isolated SQLite database, seeds fresh demo data automatically, starts the app on port `3001`, and verifies the core browser flows for ticket intake and approval handling.
 
-## Seeded Demo Data
+## Roadmap
 
-The repo includes seeded MSP-style tickets across categories such as:
+- Add role-based access
+- Plug in a real LLM provider
+- Support external ticket ingestion via webhook or PSA connector
+- Add background jobs and notification channels
 
-- password reset
-- MFA issue
-- printer problem
-- new user onboarding
-- procurement request
-- internet outage
-- email delivery issue
-- VPN access issue
-- line-of-business application issue
-- security escalation
-
-The seeded dataset also includes:
-
-- approved and pending approvals
-- open and closed tickets
-- overdue-risk examples
-- automation opportunity recommendations
-
-## Demo Walkthrough
-
-Suggested flow for a live walkthrough:
-
-1. Start on the dashboard and explain the KPI story: auto-triage rate, approvals, time saved, SLA compliance.
-2. Open the queue workbench and select a ticket that shows both rule-based and AI-assisted routing.
-3. Review the ticket detail panel: SLA, internal note, customer update draft, workflow history, and audit trail.
-4. Switch to the approvals page and show a pending approval plus a historical decision.
-5. Open the automation opportunities page and explain how the same operational data informs future automation investment.
-6. Submit a new intake ticket to show the workflow creating a fresh routed record.
-
-## Example Workflow Lifecycle
-
-Example: `LOB application issue affecting shipping`
-
-1. Intake captures company, requester, urgency, impact, and ticket narrative.
-2. Rule engine classifies the issue as a business application problem and routes it to tier 3 applications.
-3. AI recommendation raises confidence because the description shows a core business workflow impact.
-4. SLA profile is assigned based on ticket priority.
-5. Internal note and customer update draft are generated automatically.
-6. Technician requests a tier 3 escalation approval.
-7. Approver records a decision.
-8. Workflow run history and audit events preserve the full trail.
-9. The ticket contributes to both operational KPIs and strategic automation opportunity reporting.
-
-## Business Value
-
-- Reduces repetitive dispatcher and technician work
-- Improves consistency in triage and SLA handling
-- Supports safer automation with explicit approval gates
-- Makes AI assistance practical and inspectable instead of theatrical
-- Creates an automation narrative that connects operations work to measurable business outcomes
-
-## Workflow Artifacts
-
-Sample workflow definitions live in [`workflows/exports`](workflows/exports):
-
-- `ticket-intake-triage-routing.json`
-- `approval-gated-escalation.json`
-- `customer-update-review-loop.json`
-- `daily-ops-reporting-rollup.json`
-
-These are mock exports, but they are structured to communicate how the product logic could be mapped into an automation platform.
-
-## Tradeoffs And Future Roadmap
-
-Current tradeoffs:
-
-- SQLite keeps local setup easy, but Postgres would be the more natural production option
-- The AI layer is mocked to keep the repo runnable without external credentials
-- Authentication is intentionally omitted so the repo stays easy to demo locally
-
-Future roadmap:
-
-- add role-based access
-- plug in a real LLM provider
-- support external ticket ingestion via webhook or PSA connector
-- add background jobs and notification channels
+See [Future Improvements](docs/future-improvements.md) for current tradeoffs and the full roadmap.
 
 ## Repository Structure
 
@@ -213,8 +136,3 @@ docs                       Architecture and portfolio documentation
 docs/screenshots           Product screenshots and recapture notes
 workflows/exports          Mock workflow definitions
 ```
-
-## Notes For Public GitHub
-
-- Keep `.env.example` as the public reference and avoid committing `.env`.
-- The app is fully runnable locally with mocked dependencies and seeded data.
