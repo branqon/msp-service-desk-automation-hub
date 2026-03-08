@@ -16,17 +16,17 @@ export function buttonStyles({
 } = {}) {
   const variantClass =
     variant === "primary"
-      ? "bg-[#0f766e] text-white hover:bg-[#115e59]"
+      ? "bg-[#818cf8] text-white hover:bg-[#6366f1]"
       : variant === "secondary"
-        ? "border border-slate-300 bg-white text-slate-800 hover:border-slate-400 hover:bg-slate-50"
+        ? "border border-white/10 bg-white/8 text-[#f1f1f4] hover:border-white/16 hover:bg-white/12"
         : variant === "danger"
-          ? "bg-rose-700 text-white hover:bg-rose-800"
-          : "text-slate-700 hover:bg-slate-100";
+          ? "bg-rose-800 text-white hover:bg-rose-900"
+          : "text-[#8b8ba0] hover:bg-white/8";
 
   const sizeClass = size === "sm" ? "h-9 px-3 text-sm" : "h-11 px-4 text-sm";
 
   return cn(
-    "inline-flex items-center justify-center rounded-xl font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0f766e]/50 disabled:pointer-events-none disabled:opacity-60",
+    "inline-flex items-center justify-center rounded-xl font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/50 disabled:pointer-events-none disabled:opacity-60",
     variantClass,
     sizeClass,
     className,
