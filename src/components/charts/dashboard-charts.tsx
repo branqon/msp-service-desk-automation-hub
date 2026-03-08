@@ -17,7 +17,7 @@ import {
 
 import { SectionCard } from "@/components/ui/section-card";
 
-const pieColors = ["#0f766e", "#2563eb", "#d97706", "#dc2626", "#475569"];
+const pieColors = ["#818cf8", "#6366f1", "#a78bfa", "#c084fc", "#5f5f78"];
 
 export function DashboardCharts({
   ticketsByDay,
@@ -39,18 +39,18 @@ export function DashboardCharts({
             <AreaChart data={ticketsByDay} margin={{ left: 0, right: 10, top: 8, bottom: 0 }}>
               <defs>
                 <linearGradient id="ticketArea" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#0f766e" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#0f766e" stopOpacity={0.03} />
+                  <stop offset="5%" stopColor="#818cf8" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="#818cf8" stopOpacity={0.03} />
                 </linearGradient>
               </defs>
-              <CartesianGrid stroke="#e2e8f0" strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="day" tickLine={false} axisLine={false} fontSize={12} />
-              <YAxis tickLine={false} axisLine={false} allowDecimals={false} fontSize={12} />
-              <Tooltip />
+              <CartesianGrid stroke="rgba(255,255,255,0.06)" strokeDasharray="3 3" vertical={false} />
+              <XAxis dataKey="day" tickLine={false} axisLine={false} fontSize={12} tick={{ fill: "#8b8ba0" }} />
+              <YAxis tickLine={false} axisLine={false} allowDecimals={false} fontSize={12} tick={{ fill: "#8b8ba0" }} />
+              <Tooltip contentStyle={{ backgroundColor: "#1e1e2a", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "12px", color: "#f1f1f4" }} />
               <Area
                 type="monotone"
                 dataKey="volume"
-                stroke="#0f766e"
+                stroke="#818cf8"
                 fillOpacity={1}
                 fill="url(#ticketArea)"
                 strokeWidth={2.5}
@@ -82,7 +82,7 @@ export function DashboardCharts({
                     />
                   ))}
                 </Pie>
-                <Tooltip />
+                <Tooltip contentStyle={{ backgroundColor: "#1e1e2a", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "12px", color: "#f1f1f4" }} />
               </PieChart>
             </ResponsiveContainer>
           </div>
@@ -98,8 +98,8 @@ export function DashboardCharts({
                 layout="vertical"
                 margin={{ left: 15, right: 10, top: 8, bottom: 0 }}
               >
-                <CartesianGrid stroke="#e2e8f0" strokeDasharray="3 3" horizontal={false} />
-                <XAxis type="number" tickLine={false} axisLine={false} allowDecimals={false} />
+                <CartesianGrid stroke="rgba(255,255,255,0.06)" strokeDasharray="3 3" horizontal={false} />
+                <XAxis type="number" tickLine={false} axisLine={false} allowDecimals={false} tick={{ fill: "#8b8ba0" }} />
                 <YAxis
                   dataKey="category"
                   type="category"
@@ -107,9 +107,10 @@ export function DashboardCharts({
                   axisLine={false}
                   width={110}
                   fontSize={12}
+                  tick={{ fill: "#8b8ba0" }}
                 />
-                <Tooltip />
-                <Bar dataKey="volume" fill="#2563eb" radius={[0, 8, 8, 0]} />
+                <Tooltip contentStyle={{ backgroundColor: "#1e1e2a", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "12px", color: "#f1f1f4" }} />
+                <Bar dataKey="volume" fill="#a78bfa" radius={[0, 8, 8, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
