@@ -121,7 +121,7 @@ export function TicketDetailPanel({ ticket }: { ticket: TicketDetail }) {
         >
           <div className="grid gap-4 md:grid-cols-3">
             <div className="min-w-0 rounded-2xl border border-slate-200 bg-slate-50 p-4">
-              <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+              <div className="truncate text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
                 Rule Engine
               </div>
               <div className="mt-3 space-y-2 text-sm text-slate-700">
@@ -133,7 +133,7 @@ export function TicketDetailPanel({ ticket }: { ticket: TicketDetail }) {
               </div>
             </div>
             <div className="min-w-0 rounded-2xl border border-slate-200 bg-slate-50 p-4">
-              <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+              <div className="truncate text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
                 AI Recommendation
               </div>
               <div className="mt-3 space-y-2 text-sm text-slate-700">
@@ -148,7 +148,7 @@ export function TicketDetailPanel({ ticket }: { ticket: TicketDetail }) {
               </div>
             </div>
             <div className="min-w-0 rounded-2xl border border-[#0f766e]/20 bg-[#0f766e]/8 p-4">
-              <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#0f766e]">
+              <div className="truncate text-xs font-semibold uppercase tracking-[0.12em] text-[#0f766e]">
                 Final Route
               </div>
               <div className="mt-3 space-y-2 text-sm text-slate-800">
