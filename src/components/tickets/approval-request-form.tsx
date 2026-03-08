@@ -24,10 +24,10 @@ export function ApprovalRequestForm({ ticketId }: { ticketId: string }) {
 
         <div className="grid gap-4 md:grid-cols-2">
           <label className="grid gap-2 text-sm">
-            <span className="font-medium text-slate-700">Approval Type</span>
+            <span className="font-medium text-[#8b8ba0]">Approval Type</span>
             <select
               name="approvalType"
-              className="h-11 rounded-2xl border border-slate-300 bg-white px-4 text-slate-900"
+              className="h-11 rounded-2xl border border-white/10 bg-[#262635] px-4 text-[#f1f1f4]"
               defaultValue="TIER3_ESCALATION"
             >
               {Object.entries(approvalTypeLabels).map(([value, label]) => (
@@ -38,22 +38,22 @@ export function ApprovalRequestForm({ ticketId }: { ticketId: string }) {
             </select>
           </label>
           <label className="grid gap-2 text-sm">
-            <span className="font-medium text-slate-700">Requested By</span>
+            <span className="font-medium text-[#8b8ba0]">Requested By</span>
             <input
               name="requestedBy"
               defaultValue="Automation Hub Tech"
-              className="h-11 rounded-2xl border border-slate-300 bg-white px-4 text-slate-900"
+              className="h-11 rounded-2xl border border-white/10 bg-[#262635] px-4 text-[#f1f1f4]"
             />
           </label>
         </div>
         <label className="grid gap-2 text-sm">
-          <span className="font-medium text-slate-700">Reason</span>
+          <span className="font-medium text-[#8b8ba0]">Reason</span>
           <textarea
             name="reason"
             rows={3}
             required
             placeholder="Explain why the action requires approval and what business risk it addresses."
-            className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-slate-900"
+            className="rounded-2xl border border-white/10 bg-[#262635] px-4 py-3 text-[#f1f1f4]"
           />
         </label>
         <div className="flex justify-end">

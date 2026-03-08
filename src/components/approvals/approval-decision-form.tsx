@@ -15,25 +15,25 @@ export function ApprovalDecisionForm({ approvalId }: { approvalId: string }) {
   return (
     <form
       action={action}
-      className="grid gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-4"
+      className="grid gap-4 rounded-2xl border border-white/6 bg-[#262635] p-4"
     >
       <FormAlert message={state.error} />
 
       <div className="grid gap-4 md:grid-cols-2">
         <label className="grid gap-2 text-sm">
-          <span className="font-medium text-slate-700">Approver</span>
+          <span className="font-medium text-[#8b8ba0]">Approver</span>
           <input
             name="approverName"
             defaultValue="Service Delivery Manager"
-            className="h-10 rounded-xl border border-slate-300 bg-white px-3 text-slate-900"
+            className="h-10 rounded-xl border border-white/10 bg-[#262635] px-3 text-[#f1f1f4]"
           />
         </label>
         <label className="grid gap-2 text-sm">
-          <span className="font-medium text-slate-700">Decision Notes</span>
+          <span className="font-medium text-[#8b8ba0]">Decision Notes</span>
           <input
             name="decisionNotes"
             placeholder="Reason, budget context, or control note"
-            className="h-10 rounded-xl border border-slate-300 bg-white px-3 text-slate-900"
+            className="h-10 rounded-xl border border-white/10 bg-[#262635] px-3 text-[#f1f1f4]"
           />
         </label>
       </div>

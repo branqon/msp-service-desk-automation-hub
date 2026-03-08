@@ -30,21 +30,21 @@ export function CustomerUpdateReviewForm({
         <FormAlert message={state.error} />
 
         <label className="grid gap-2 text-sm">
-          <span className="font-medium text-slate-700">Draft</span>
+          <span className="font-medium text-[#8b8ba0]">Draft</span>
           <textarea
             name="customerUpdateDraft"
             defaultValue={currentDraft}
             rows={5}
-            className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-slate-900"
+            className="rounded-2xl border border-white/10 bg-[#262635] px-4 py-3 text-[#f1f1f4]"
           />
         </label>
         <div className="grid gap-4 md:grid-cols-[1fr_auto] md:items-end">
           <label className="grid gap-2 text-sm">
-            <span className="font-medium text-slate-700">Reviewer Name</span>
+            <span className="font-medium text-[#8b8ba0]">Reviewer Name</span>
             <input
               name="reviewerName"
               defaultValue={reviewerName ?? "Automation Hub Tech"}
-              className="h-11 rounded-2xl border border-slate-300 bg-white px-4 text-slate-900"
+              className="h-11 rounded-2xl border border-white/10 bg-[#262635] px-4 text-[#f1f1f4]"
             />
           </label>
           <div className="flex justify-end">
