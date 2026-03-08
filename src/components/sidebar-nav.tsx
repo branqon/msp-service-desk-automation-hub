@@ -23,12 +23,12 @@ export function SidebarNav({ mobile = false }: { mobile?: boolean }) {
               "rounded-2xl border px-4 py-3 transition-colors",
               mobile ? "min-w-[220px]" : "w-full",
               active
-                ? "border-[#0f766e]/30 bg-[#0f766e]/10 text-slate-950"
-                : "border-transparent text-slate-600 hover:border-slate-200 hover:bg-white/70 hover:text-slate-950",
+                ? "border-indigo-400/30 bg-indigo-500/15 text-[#f1f1f4]"
+                : "border-transparent text-[#8b8ba0] hover:border-white/6 hover:bg-white/5 hover:text-[#f1f1f4]",
             )}
           >
             <div className="text-sm font-semibold">{item.label}</div>
-            <div className="mt-1 text-xs leading-5 text-slate-500">{item.caption}</div>
+            <div className="mt-1 text-xs leading-5 text-[#5f5f78]">{item.caption}</div>
           </Link>
         );
       })}
