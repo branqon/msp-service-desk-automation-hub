@@ -64,7 +64,7 @@ export function TicketDetailPanel({ ticket }: { ticket: TicketDetail }) {
             </div>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-4">
             <div className="min-w-0 rounded-2xl border border-slate-200 bg-slate-50 p-4">
               <div className="truncate text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
                 Requester
@@ -114,13 +114,13 @@ export function TicketDetailPanel({ ticket }: { ticket: TicketDetail }) {
         </div>
       </SectionCard>
 
-      <div className="grid gap-5 xl:grid-cols-[1.25fr_0.75fr]">
+      <div className="grid gap-5 2xl:grid-cols-[1.25fr_0.75fr]">
         <SectionCard
           title="Triage Engine"
           description="Deterministic routing is shown alongside AI-assisted recommendations so the decision path stays transparent."
         >
           <div className="grid gap-4 md:grid-cols-3">
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <div className="min-w-0 rounded-2xl border border-slate-200 bg-slate-50 p-4">
               <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
                 Rule Engine
               </div>
@@ -132,7 +132,7 @@ export function TicketDetailPanel({ ticket }: { ticket: TicketDetail }) {
                 </Badge>
               </div>
             </div>
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <div className="min-w-0 rounded-2xl border border-slate-200 bg-slate-50 p-4">
               <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
                 AI Recommendation
               </div>
@@ -147,7 +147,7 @@ export function TicketDetailPanel({ ticket }: { ticket: TicketDetail }) {
                 </div>
               </div>
             </div>
-            <div className="rounded-2xl border border-[#0f766e]/20 bg-[#0f766e]/8 p-4">
+            <div className="min-w-0 rounded-2xl border border-[#0f766e]/20 bg-[#0f766e]/8 p-4">
               <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#0f766e]">
                 Final Route
               </div>
@@ -196,7 +196,7 @@ export function TicketDetailPanel({ ticket }: { ticket: TicketDetail }) {
         </SectionCard>
       </div>
 
-      <div className="grid gap-5 xl:grid-cols-[1.1fr_0.9fr]">
+      <div className="grid gap-5 2xl:grid-cols-[1.1fr_0.9fr]">
         <SectionCard
           title="Technician Assist"
           description="Operationally useful outputs that reduce triage and communication overhead for the service desk."
@@ -273,7 +273,7 @@ export function TicketDetailPanel({ ticket }: { ticket: TicketDetail }) {
         </SectionCard>
       </div>
 
-      <div className="grid gap-5 xl:grid-cols-[1fr_1fr]">
+      <div className="grid gap-5 2xl:grid-cols-[1fr_1fr]">
         <CustomerUpdateReviewForm
           ticketId={ticket.id}
           currentDraft={ticket.customerUpdateDraft ?? ""}
@@ -282,7 +282,7 @@ export function TicketDetailPanel({ ticket }: { ticket: TicketDetail }) {
         <ApprovalRequestForm ticketId={ticket.id} />
       </div>
 
-      <div className="grid gap-5 xl:grid-cols-[0.85fr_1.15fr]">
+      <div className="grid gap-5 2xl:grid-cols-[0.85fr_1.15fr]">
         <SectionCard
           title="Approval History"
           description="Every sensitive action keeps its decision record, requester, and approver."
