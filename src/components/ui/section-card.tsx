@@ -20,20 +20,20 @@ export function SectionCard({
   return (
     <section
       className={cn(
-        "rounded-3xl border border-white/8 bg-[#1e1e2a] p-5 shadow-[0_18px_40px_-28px_rgba(0,0,0,0.7)] backdrop-blur",
+        "rounded-[6px] border border-[var(--border)] bg-[var(--card)]",
         className,
       )}
     >
       {(title || description || action) && (
-        <div className="mb-4 flex flex-col gap-3 border-b border-white/6 pb-4 md:flex-row md:items-start md:justify-between">
-          <div className="space-y-1">
+        <div className="flex flex-col gap-1 border-b border-[var(--border)] px-5 py-3 md:flex-row md:items-center md:justify-between">
+          <div>
             {title ? (
-              <h2 className="text-lg font-semibold tracking-tight text-[#f1f1f4]">
+              <h2 className="text-[13px] font-semibold text-[var(--ink)]">
                 {title}
               </h2>
             ) : null}
             {description ? (
-              <p className="max-w-2xl text-sm leading-6 text-[#8b8ba0]">
+              <p className="text-[11px] text-[var(--faint)]">
                 {description}
               </p>
             ) : null}
@@ -41,7 +41,7 @@ export function SectionCard({
           {action ? <div className="shrink-0">{action}</div> : null}
         </div>
       )}
-      {children}
+      <div className="p-5">{children}</div>
     </section>
   );
 }
