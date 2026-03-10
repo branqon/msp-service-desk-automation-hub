@@ -93,7 +93,7 @@ export default async function Home() {
             <Link href="/tickets/new" className={buttonStyles({ variant: "secondary", size: "sm" })}>
               Submit Intake Ticket
             </Link>
-            <Link href="/automation-opportunities" className={buttonStyles({ variant: "ghost", size: "sm" })}>
+            <Link href="/automation-opportunities" className={buttonStyles({ variant: "secondary", size: "sm" })}>
               Automation Candidates
             </Link>
           </div>

@@ -12,7 +12,7 @@ export function SubmitButton({
 }: {
   label: string;
   pendingLabel?: string;
-  variant?: "primary" | "secondary" | "ghost" | "danger";
+  variant?: "primary" | "secondary" | "danger";
   size?: "md" | "sm";
 }) {
   const { pending } = useFormStatus();
