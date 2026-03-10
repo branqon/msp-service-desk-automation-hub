@@ -1,120 +1,144 @@
-"use client";
+import { cn } from "@/lib/utils";
 
-import {
-  Area,
-  AreaChart,
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-  Cell,
-} from "recharts";
+/* ---------- Approval Aging ---------- */
 
-import { SectionCard } from "@/components/ui/section-card";
+interface AgingBuckets {
+  over72: number;
+  h24to72: number;
+  h4to24: number;
+  under4: number;
+}
 
-const pieColors = ["#818cf8", "#6366f1", "#a78bfa", "#c084fc", "#5f5f78"];
+export function ApprovalAging({ buckets }: { buckets: AgingBuckets }) {
+  const items: Array<{ label: string; value: number; hot?: "red" | "amber" }> = [
+    { label: "> 72h", value: buckets.over72, hot: "red" },
+    { label: "24 \u2013 72h", value: buckets.h24to72, hot: "amber" },
+    { label: "4 \u2013 24h", value: buckets.h4to24 },
+    { label: "< 4h", value: buckets.under4 },
+  ];
 
-export function DashboardCharts({
-  ticketsByDay,
-  queueBreakdown,
-  categoryBreakdown,
-}: {
-  ticketsByDay: Array<{ day: string; volume: number }>;
-  queueBreakdown: Array<{ queue: string; volume: number }>;
-  categoryBreakdown: Array<{ category: string; volume: number }>;
-}) {
   return (
-    <div className="grid gap-5 xl:grid-cols-[1.3fr_1fr]">
-      <SectionCard
-        title="Ticket Throughput"
-        description="Seven-day view of intake volume using the seeded MSP workload."
-      >
-        <div className="h-[280px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={ticketsByDay} margin={{ left: 0, right: 10, top: 8, bottom: 0 }}>
-              <defs>
-                <linearGradient id="ticketArea" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#818cf8" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#818cf8" stopOpacity={0.03} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid stroke="rgba(255,255,255,0.06)" strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="day" tickLine={false} axisLine={false} fontSize={12} tick={{ fill: "#8b8ba0" }} />
-              <YAxis tickLine={false} axisLine={false} allowDecimals={false} fontSize={12} tick={{ fill: "#8b8ba0" }} />
-              <Tooltip contentStyle={{ backgroundColor: "#1e1e2a", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "12px", color: "#f1f1f4" }} />
-              <Area
-                type="monotone"
-                dataKey="volume"
-                stroke="#818cf8"
-                fillOpacity={1}
-                fill="url(#ticketArea)"
-                strokeWidth={2.5}
-              />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
-      </SectionCard>
-      <div className="grid gap-5">
-        <SectionCard
-          title="Queue Distribution"
-          description="Current routing distribution across specialist teams."
-        >
-          <div className="h-[240px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={queueBreakdown}
-                  dataKey="volume"
-                  nameKey="queue"
-                  innerRadius={52}
-                  outerRadius={82}
-                  paddingAngle={3}
+    <div className="rounded-[6px] border border-[var(--border)] bg-[var(--card)] px-5 py-4">
+      <div className="text-[11.5px] font-semibold text-[var(--ink)]">Approval Aging</div>
+      <div className="mb-3.5 mt-px text-[10px] text-[var(--faint)]">
+        Open approvals by time waiting
+      </div>
+      <div className="grid grid-cols-4 gap-2">
+        {items.map((item) => (
+          <div
+            key={item.label}
+            className={cn(
+              "rounded-[5px] border border-[var(--border-light)] py-2.5 text-center",
+              item.hot === "red" && "border-[#f5cdd0] bg-[var(--red-bg)]",
+              item.hot === "amber" && "border-[#f5deb3] bg-[var(--amber-bg)]",
+            )}
+          >
+            <div
+              className={cn(
+                "text-[17px] font-bold leading-none",
+                item.hot === "red"
+                  ? "text-[var(--red)]"
+                  : item.hot === "amber"
+                    ? "text-[var(--amber)]"
+                    : "text-[var(--ink)]",
+              )}
+            >
+              {item.value}
+            </div>
+            <div className="mt-1.5 text-[9.5px] tracking-[0.01em] text-[var(--faint)]">
+              {item.label}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ---------- SLA Risk Heatmap ---------- */
+
+interface HeatRow {
+  queue: string;
+  p1p2: number;
+  p3: number;
+  p4: number;
+  breach: number;
+}
+
+function heatCellTone(value: number, isBreach: boolean) {
+  if (value === 0) return "zero";
+  if (isBreach) return value > 0 ? "danger" : "zero";
+  if (value >= 2) return "danger";
+  if (value === 1) return "warn";
+  return "ok";
+}
+
+const cellColors: Record<string, string> = {
+  zero: "text-[var(--bone)]",
+  ok: "bg-[var(--green-bg)] text-[var(--green)]",
+  warn: "bg-[var(--amber-bg)] text-[var(--amber)]",
+  danger: "bg-[var(--red-bg)] text-[var(--red)]",
+  neutral: "text-[var(--muted)]",
+};
+
+export function SlaRiskHeatmap({ rows }: { rows: HeatRow[] }) {
+  const headers = ["", "P1\u2013P2", "P3", "P4", "Breach"];
+
+  return (
+    <div className="rounded-[6px] border border-[var(--border)] bg-[var(--card)] px-5 py-4">
+      <div className="text-[11.5px] font-semibold text-[var(--ink)]">SLA Risk by Queue</div>
+      <div className="mb-3.5 mt-px text-[10px] text-[var(--faint)]">
+        Open tickets by severity tier
+      </div>
+
+      <div className="grid grid-cols-[72px_repeat(4,1fr)] text-[11px]">
+        {/* Header row */}
+        {headers.map((h) => (
+          <div
+            key={h}
+            className="border-b border-[var(--border-light)] px-2.5 py-1.5 text-[9.5px] font-semibold uppercase tracking-[0.05em] text-[var(--faint)]"
+          >
+            {h}
+          </div>
+        ))}
+
+        {/* Data rows */}
+        {rows.map((row) => {
+          const cells: Array<{ value: number; breach: boolean }> = [
+            { value: row.p1p2, breach: false },
+            { value: row.p3, breach: false },
+            { value: row.p4, breach: false },
+            { value: row.breach, breach: true },
+          ];
+          return [
+            <div
+              key={`${row.queue}-label`}
+              className="border-b border-[var(--border-light)] px-2.5 py-2.5 text-[11px] font-medium text-[var(--muted)]"
+            >
+              {row.queue}
+            </div>,
+            ...cells.map((cell, j) => {
+              const tone = heatCellTone(cell.value, cell.breach);
+              return (
+                <div
+                  key={`${row.queue}-${j}`}
+                  className={cn(
+                    "border-b border-l border-[var(--border-light)] px-2.5 py-2.5 text-center text-[12px] font-semibold",
+                    cellColors[tone],
+                  )}
                 >
-                  {queueBreakdown.map((entry, index) => (
-                    <Cell
-                      key={`${entry.queue}-${index}`}
-                      fill={pieColors[index % pieColors.length]}
-                    />
-                  ))}
-                </Pie>
-                <Tooltip contentStyle={{ backgroundColor: "#1e1e2a", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "12px", color: "#f1f1f4" }} />
-              </PieChart>
-            </ResponsiveContainer>
+                  {cell.value === 0 ? "\u2014" : cell.value}
+                </div>
+              );
+            }),
+          ];
+        })}
+
+        {rows.length === 0 && (
+          <div className="col-span-5 px-2.5 py-6 text-center text-[11px] text-[var(--faint)]">
+            No open tickets with SLA data
           </div>
-        </SectionCard>
-        <SectionCard
-          title="Recurring Categories"
-          description="Top ticket patterns currently visible in the seeded data."
-        >
-          <div className="h-[240px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={categoryBreakdown.slice(0, 5)}
-                layout="vertical"
-                margin={{ left: 15, right: 10, top: 8, bottom: 0 }}
-              >
-                <CartesianGrid stroke="rgba(255,255,255,0.06)" strokeDasharray="3 3" horizontal={false} />
-                <XAxis type="number" tickLine={false} axisLine={false} allowDecimals={false} tick={{ fill: "#8b8ba0" }} />
-                <YAxis
-                  dataKey="category"
-                  type="category"
-                  tickLine={false}
-                  axisLine={false}
-                  width={110}
-                  fontSize={12}
-                  tick={{ fill: "#8b8ba0" }}
-                />
-                <Tooltip contentStyle={{ backgroundColor: "#1e1e2a", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "12px", color: "#f1f1f4" }} />
-                <Bar dataKey="volume" fill="#a78bfa" radius={[0, 8, 8, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </SectionCard>
+        )}
       </div>
     </div>
   );
