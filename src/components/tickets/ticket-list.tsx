@@ -34,7 +34,7 @@ export function TicketList({
       title="Incoming Queue"
       description="Rule-based and AI-assisted routing results for the current seeded MSP workload."
     >
-      <div className="divide-y divide-white/6">
+      <div className="divide-y divide-[var(--border)]">
         {tickets.map((ticket) => {
           const slaRisk = getSlaRiskLevel(ticket.dueResolutionAt, ticket.status);
 
@@ -42,21 +42,21 @@ export function TicketList({
             <Link
               key={ticket.id}
               href={`/tickets/${ticket.id}`}
-              className={`block rounded-2xl px-4 py-3.5 transition-colors hover:bg-white/5 ${
+              className={`block rounded-[5px] px-4 py-3.5 transition-colors hover:bg-[#fafaf7] ${
                 selectedTicketId === ticket.id
-                  ? "bg-indigo-500/10 ring-1 ring-indigo-400/20"
+                  ? "bg-[var(--border-light)] ring-1 ring-[var(--ink)]/20"
                   : ""
               }`}
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 flex-1">
-                  <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[#5f5f78]">
+                  <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--faint)]">
                     {ticket.ticketNumber} · {ticket.company.name}
                   </div>
-                  <div className="mt-1.5 font-semibold leading-snug text-[#f1f1f4]">
+                  <div className="mt-1.5 font-semibold leading-snug text-[var(--ink)]">
                     {ticket.subject}
                   </div>
-                  <div className="mt-1 text-sm text-[#8b8ba0]">
+                  <div className="mt-1 text-sm text-[var(--muted)]">
                     {ticket.requester.name} ·{" "}
                     {categoryLabels[ticket.category ?? ""] ?? "Pending"} ·{" "}
                     {formatDateTime(ticket.createdAt)}

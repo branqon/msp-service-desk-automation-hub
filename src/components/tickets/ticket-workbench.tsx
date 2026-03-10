@@ -16,17 +16,17 @@ export function TicketWorkbench({
 }) {
   return (
     <div className="grid gap-5">
-      <section className="rounded-3xl border border-white/8 bg-[#1e1e2a] p-6 shadow-[0_18px_50px_-32px_rgba(0,0,0,0.7)] backdrop-blur">
+      <section className="rounded-[6px] border border-[var(--border)] bg-[var(--card)] p-6">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div className="space-y-3">
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#818cf8]">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[var(--ink-60)]">
               Queue Workbench
             </p>
             <div>
-              <h2 className="font-display text-4xl font-semibold tracking-tight text-[#f1f1f4]">
+              <h2 className="text-4xl font-semibold tracking-tight text-[var(--ink)]">
                 Ticket triage, approvals, and audit context in one view
               </h2>
-              <p className="mt-3 max-w-3xl text-sm leading-6 text-[#8b8ba0]">
+              <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--muted)]">
                 This screen mirrors the kind of internal MSP console a dispatcher or service lead would use:
                 queue visibility on the left and a full operational narrative on the right.
               </p>
