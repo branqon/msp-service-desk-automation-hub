@@ -49,10 +49,9 @@ export function TicketWorkbench({
           <TicketDetailPanel ticket={selectedTicket} />
         ) : (
           <SectionCard title="Select a Ticket" description="Choose a ticket from the queue to inspect triage details, SLA state, approvals, workflow runs, and the audit trail.">
-            <EmptyState
-              title="Ticket detail panel is idle"
-              description="Pick an item from the incoming queue to review the deterministic route, AI recommendation, customer update draft, and sensitive action approvals."
-            />
+            <EmptyState title="Ticket detail panel is idle">
+              Pick an item from the incoming queue to review the deterministic route, AI recommendation, customer update draft, and sensitive action approvals.
+            </EmptyState>
           </SectionCard>
         )}
       </div>

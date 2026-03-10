@@ -23,10 +23,9 @@ export function TicketList({
 }) {
   if (tickets.length === 0) {
     return (
-      <EmptyState
-        title="No tickets seeded yet"
-        description="Run the seed command or submit a new intake request to populate the queue."
-      />
+      <EmptyState title="No tickets seeded yet">
+        Run the seed command or submit a new intake request to populate the queue.
+      </EmptyState>
     );
   }
 

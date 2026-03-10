@@ -77,10 +77,9 @@ export default async function ApprovalsPage() {
       >
         <div data-testid="pending-review-section">
           {pending.length === 0 ? (
-            <EmptyState
-              title="No pending approvals"
-              description="The queue is clear right now. Approved and rejected decisions remain below for audit reference."
-            />
+            <EmptyState title="No pending approvals">
+              The queue is clear right now. Approved and rejected decisions remain below for audit reference.
+            </EmptyState>
           ) : (
             <div className="grid gap-4 xl:grid-cols-2">
               {pending.map((approval) => (
