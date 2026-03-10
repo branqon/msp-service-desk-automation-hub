@@ -22,53 +22,47 @@ export default async function AutomationOpportunitiesPage() {
 
   return (
     <div className="grid gap-5">
-      <section className="rounded-3xl border border-white/8 bg-[#1e1e2a] p-6 shadow-[0_20px_50px_-34px_rgba(0,0,0,0.7)] backdrop-blur">
-        <div className="space-y-4">
-          <Badge tone="teal">Strategic Planning View</Badge>
-          <div>
-            <h2 className="font-display text-4xl font-semibold tracking-tight text-[#f1f1f4]">
-              Use operational ticket patterns to decide what should be automated next
-            </h2>
-            <p className="mt-3 max-w-3xl text-sm leading-7 text-[#8b8ba0]">
-              This page focuses on repeatability, policy constraints, and business value so the project tells
-              a stronger solutions-engineering story than a simple incident dashboard.
-            </p>
-          </div>
+      <div className="flex items-center justify-between border-b border-[var(--border)] bg-[var(--card)] px-6 py-3">
+        <div>
+          <h1 className="text-[13px] font-semibold text-[var(--ink)]">Automation Review</h1>
+          <p className="text-[11px] text-[var(--faint)]">
+            {opportunities.length} opportunity areas &middot; {formatMinutes(estimatedMonthlyHours * 60)} estimated monthly savings
+          </p>
         </div>
-      </section>
+      </div>
 
-      <div className="grid gap-5 sm:grid-cols-3">
-        <SectionCard>
-          <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#5f5f78]">
+      <div className="grid grid-cols-3 gap-px overflow-hidden rounded-[6px] border border-[var(--border)] bg-[var(--border)]">
+        <div className="bg-[var(--card)] px-5 py-3.5">
+          <div className="text-xl font-bold tracking-tight text-[var(--ink)]">{opportunities.length}</div>
+          <div className="mt-1.5 text-[10px] font-medium uppercase tracking-[0.07em] text-[var(--whisper)]">
             Opportunity Areas
           </div>
-          <div className="mt-2 text-3xl font-semibold text-[#f1f1f4]">{opportunities.length}</div>
-          <p className="mt-2 text-sm text-[#8b8ba0]">
-            Distinct categories currently flagged as automation candidates.
+          <p className="mt-0.5 text-[10.5px] text-[var(--faint)]">
+            Categories flagged as automation candidates.
           </p>
-        </SectionCard>
-        <SectionCard>
-          <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#5f5f78]">
-            Estimated Monthly Time
-          </div>
-          <div className="mt-2 text-3xl font-semibold text-[#f1f1f4]">
+        </div>
+        <div className="bg-[var(--card)] px-5 py-3.5">
+          <div className="text-xl font-bold tracking-tight text-[var(--ink)]">
             {formatMinutes(estimatedMonthlyHours * 60)}
           </div>
-          <p className="mt-2 text-sm text-[#8b8ba0]">
-            Roll-up of the hours saved if the highest-value playbooks are deployed.
-          </p>
-        </SectionCard>
-        <SectionCard>
-          <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#5f5f78]">
-            Guardrailed Categories
+          <div className="mt-1.5 text-[10px] font-medium uppercase tracking-[0.07em] text-[var(--whisper)]">
+            Estimated Monthly Time
           </div>
-          <div className="mt-2 text-3xl font-semibold text-[#f1f1f4]">
+          <p className="mt-0.5 text-[10.5px] text-[var(--faint)]">
+            Hours saved if highest-value playbooks deploy.
+          </p>
+        </div>
+        <div className="bg-[var(--card)] px-5 py-3.5">
+          <div className="text-xl font-bold tracking-tight text-[var(--amber)]">
             {categoriesWithGuardrails}
           </div>
-          <p className="mt-2 text-sm text-[#8b8ba0]">
-            Candidate areas that still need explicit approvals or policy checks.
+          <div className="mt-1.5 text-[10px] font-medium uppercase tracking-[0.07em] text-[var(--whisper)]">
+            Guardrailed Categories
+          </div>
+          <p className="mt-0.5 text-[10.5px] text-[var(--faint)]">
+            Need explicit approvals or policy checks.
           </p>
-        </SectionCard>
+        </div>
       </div>
 
       <SectionCard
@@ -84,7 +78,7 @@ export default async function AutomationOpportunitiesPage() {
             return (
               <div
                 key={opportunity.id}
-                className="grid gap-4 rounded-3xl border border-white/6 bg-[#262635] p-5 xl:grid-cols-[0.9fr_1.1fr]"
+                className="grid gap-4 rounded-[6px] border border-[var(--border)] bg-[var(--card)] p-5 xl:grid-cols-[0.9fr_1.1fr]"
               >
                 <div className="space-y-3">
                   <div className="flex flex-wrap items-center gap-2">
@@ -94,54 +88,54 @@ export default async function AutomationOpportunitiesPage() {
                     </Badge>
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold text-[#f1f1f4]">
+                    <h3 className="text-[13px] font-semibold text-[var(--ink)]">
                       {categoryLabels[opportunity.category]}
                     </h3>
-                    <p className="mt-2 text-sm leading-6 text-[#8b8ba0]">
+                    <p className="mt-2 text-[11px] leading-6 text-[var(--muted)]">
                       {opportunity.rationale}
                     </p>
                   </div>
                   <div className="grid gap-3 sm:grid-cols-3">
-                    <div className="rounded-2xl border border-white/6 bg-[#1e1e2a] p-4">
-                      <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[#5f5f78]">
+                    <div className="rounded-[5px] border border-[var(--border)] bg-[var(--background)] p-4">
+                      <div className="text-[10px] font-medium uppercase tracking-[0.07em] text-[var(--whisper)]">
                         Monthly Volume
                       </div>
-                      <div className="mt-2 text-2xl font-semibold text-[#f1f1f4]">
+                      <div className="mt-2 text-xl font-bold tracking-tight text-[var(--ink)]">
                         {opportunity.monthlyTicketVolume}
                       </div>
                     </div>
-                    <div className="rounded-2xl border border-white/6 bg-[#1e1e2a] p-4">
-                      <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[#5f5f78]">
+                    <div className="rounded-[5px] border border-[var(--border)] bg-[var(--background)] p-4">
+                      <div className="text-[10px] font-medium uppercase tracking-[0.07em] text-[var(--whisper)]">
                         Hours Saved
                       </div>
-                      <div className="mt-2 text-2xl font-semibold text-[#f1f1f4]">
+                      <div className="mt-2 text-xl font-bold tracking-tight text-[var(--ink)]">
                         {opportunity.estimatedMonthlyHoursSaved}
                       </div>
                     </div>
-                    <div className="rounded-2xl border border-white/6 bg-[#1e1e2a] p-4">
-                      <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[#5f5f78]">
+                    <div className="rounded-[5px] border border-[var(--border)] bg-[var(--background)] p-4">
+                      <div className="text-[10px] font-medium uppercase tracking-[0.07em] text-[var(--whisper)]">
                         Current Seeded Count
                       </div>
-                      <div className="mt-2 text-2xl font-semibold text-[#f1f1f4]">
+                      <div className="mt-2 text-xl font-bold tracking-tight text-[var(--ink)]">
                         {currentVolume}
                       </div>
                     </div>
                   </div>
                 </div>
                 <div className="space-y-4">
-                  <div className="rounded-2xl border border-white/6 bg-[#1e1e2a] p-4">
-                    <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[#5f5f78]">
+                  <div className="rounded-[5px] border border-[var(--border)] bg-[var(--background)] p-4">
+                    <div className="text-[10px] font-medium uppercase tracking-[0.07em] text-[var(--whisper)]">
                       Recommended Playbook
                     </div>
-                    <p className="mt-3 text-sm leading-6 text-[#8b8ba0]">
+                    <p className="mt-3 text-[11px] leading-6 text-[var(--muted)]">
                       {opportunity.recommendedPlaybook}
                     </p>
                   </div>
-                  <div className="rounded-2xl border border-white/6 bg-[#1e1e2a] p-4">
-                    <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[#5f5f78]">
+                  <div className="rounded-[5px] border border-[var(--border)] bg-[var(--background)] p-4">
+                    <div className="text-[10px] font-medium uppercase tracking-[0.07em] text-[var(--whisper)]">
                       Guardrails
                     </div>
-                    <p className="mt-3 text-sm leading-6 text-[#8b8ba0]">
+                    <p className="mt-3 text-[11px] leading-6 text-[var(--muted)]">
                       {opportunity.guardrails}
                     </p>
                   </div>
