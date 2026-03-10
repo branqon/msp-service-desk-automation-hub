@@ -7,15 +7,11 @@ export type BadgeTone =
   | "teal";
 
 export const navigationItems = [
-  { href: "/", label: "Dashboard", caption: "Metrics and workflow health" },
-  { href: "/tickets", label: "Tickets", caption: "Queue and ticket detail" },
-  { href: "/tickets/new", label: "Intake", caption: "Submit inbound work" },
-  { href: "/approvals", label: "Approvals", caption: "Human-in-loop actions" },
-  {
-    href: "/automation-opportunities",
-    label: "Automation Opportunities",
-    caption: "Strategic backlog and ROI",
-  },
+  { href: "/", label: "Triage Console" },
+  { href: "/tickets", label: "Queue Workbench" },
+  { href: "/tickets/new", label: "Ticket Intake" },
+  { href: "/approvals", label: "Approval Gate" },
+  { href: "/automation-opportunities", label: "Automation Review" },
 ] as const;
 
 export const issueTypeLabels: Record<string, string> = {

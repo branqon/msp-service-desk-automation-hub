@@ -9,26 +9,51 @@ import { cn } from "@/lib/utils";
 export function SidebarNav({ mobile = false }: { mobile?: boolean }) {
   const pathname = usePathname();
 
+  if (mobile) {
+    return (
+      <nav className="flex gap-1.5 overflow-x-auto">
+        {navigationItems.map((item) => {
+          const active =
+            item.href === "/" ? pathname === item.href : pathname.startsWith(item.href);
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                "whitespace-nowrap rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
+                active
+                  ? "bg-[var(--ink)] text-white"
+                  : "text-[var(--muted)] hover:bg-[var(--border-light)] hover:text-[var(--ink)]",
+              )}
+            >
+              {item.label}
+            </Link>
+          );
+        })}
+      </nav>
+    );
+  }
+
   return (
-    <nav className={cn("flex gap-2", mobile ? "overflow-x-auto" : "flex-col")}>
+    <nav className="flex flex-col gap-px px-2">
       {navigationItems.map((item) => {
         const active =
           item.href === "/" ? pathname === item.href : pathname.startsWith(item.href);
-
         return (
           <Link
             key={item.href}
             href={item.href}
             className={cn(
-              "rounded-2xl border px-4 py-3 transition-colors",
-              mobile ? "min-w-[220px]" : "w-full",
+              "relative rounded-[5px] px-2.5 py-[7px] text-xs transition-colors",
               active
-                ? "border-indigo-400/30 bg-indigo-500/15 text-[#f1f1f4]"
-                : "border-transparent text-[#8b8ba0] hover:border-white/6 hover:bg-white/5 hover:text-[#f1f1f4]",
+                ? "bg-white/[0.06] text-white/[0.88]"
+                : "text-white/30 hover:bg-white/[0.04] hover:text-white/60",
             )}
           >
-            <div className="text-sm font-semibold">{item.label}</div>
-            <div className="mt-1 text-xs leading-5 text-[#5f5f78]">{item.caption}</div>
+            {active && (
+              <span className="absolute left-0 top-[7px] bottom-[7px] w-0.5 rounded-r-sm bg-[var(--brand-mark)]" />
+            )}
+            {item.label}
           </Link>
         );
       })}
