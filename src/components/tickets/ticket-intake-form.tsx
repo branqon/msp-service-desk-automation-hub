@@ -31,11 +31,11 @@ export function TicketIntakeForm({
 
           <div className="grid gap-4 md:grid-cols-2">
             <label className="grid gap-2 text-sm">
-              <span className="font-medium text-[#8b8ba0]">Company</span>
+              <span className="font-medium text-[var(--muted)]">Company</span>
               <select
                 name="companyId"
                 required
-                className="h-11 rounded-2xl border border-white/10 bg-[#262635] px-4 text-[#f1f1f4]"
+                className="h-11 rounded-[5px] border border-[var(--border)] bg-[var(--card)] px-4 text-[var(--ink)]"
                 defaultValue=""
               >
                 <option value="" disabled>
@@ -49,11 +49,11 @@ export function TicketIntakeForm({
               </select>
             </label>
             <label className="grid gap-2 text-sm">
-              <span className="font-medium text-[#8b8ba0]">Issue Type</span>
+              <span className="font-medium text-[var(--muted)]">Issue Type</span>
               <select
                 name="issueType"
                 required
-                className="h-11 rounded-2xl border border-white/10 bg-[#262635] px-4 text-[#f1f1f4]"
+                className="h-11 rounded-[5px] border border-[var(--border)] bg-[var(--card)] px-4 text-[var(--ink)]"
                 defaultValue="PASSWORD_RESET"
               >
                 {Object.entries(issueTypeLabels).map(([value, label]) => (
@@ -67,62 +67,62 @@ export function TicketIntakeForm({
 
           <div className="grid gap-4 md:grid-cols-2">
             <label className="grid gap-2 text-sm">
-              <span className="font-medium text-[#8b8ba0]">Requester Name</span>
+              <span className="font-medium text-[var(--muted)]">Requester Name</span>
               <input
                 name="requesterName"
                 required
                 placeholder="Elena Torres"
-                className="h-11 rounded-2xl border border-white/10 bg-[#262635] px-4 text-[#f1f1f4]"
+                className="h-11 rounded-[5px] border border-[var(--border)] bg-[var(--card)] px-4 text-[var(--ink)]"
               />
             </label>
             <label className="grid gap-2 text-sm">
-              <span className="font-medium text-[#8b8ba0]">Requester Email</span>
+              <span className="font-medium text-[var(--muted)]">Requester Email</span>
               <input
                 name="requesterEmail"
                 type="email"
                 required
                 placeholder="elena.torres@customer.example"
-                className="h-11 rounded-2xl border border-white/10 bg-[#262635] px-4 text-[#f1f1f4]"
+                className="h-11 rounded-[5px] border border-[var(--border)] bg-[var(--card)] px-4 text-[var(--ink)]"
               />
             </label>
           </div>
 
           <div className="grid gap-4 md:grid-cols-[1fr_auto]">
             <label className="grid gap-2 text-sm">
-              <span className="font-medium text-[#8b8ba0]">Requester Title</span>
+              <span className="font-medium text-[var(--muted)]">Requester Title</span>
               <input
                 name="requesterTitle"
                 required
                 placeholder="HR Generalist"
-                className="h-11 rounded-2xl border border-white/10 bg-[#262635] px-4 text-[#f1f1f4]"
+                className="h-11 rounded-[5px] border border-[var(--border)] bg-[var(--card)] px-4 text-[var(--ink)]"
               />
             </label>
-            <label className="flex min-h-11 items-center gap-3 rounded-2xl border border-white/6 bg-[#262635] px-4 text-sm text-[#8b8ba0]">
+            <label className="flex min-h-11 items-center gap-3 rounded-[5px] border border-[var(--border)] bg-[var(--card)] px-4 text-sm text-[var(--muted)]">
               <input
                 type="checkbox"
                 name="requesterVip"
-                className="h-4 w-4 rounded border-white/10"
+                className="h-4 w-4 rounded border-[var(--border)]"
               />
               Mark requester as VIP
             </label>
           </div>
 
           <label className="grid gap-2 text-sm">
-            <span className="font-medium text-[#8b8ba0]">Subject</span>
+            <span className="font-medium text-[var(--muted)]">Subject</span>
             <input
               name="subject"
               required
               placeholder="New assistant principal starts Monday with no account bundle"
-              className="h-11 rounded-2xl border border-white/10 bg-[#262635] px-4 text-[#f1f1f4]"
+              className="h-11 rounded-[5px] border border-[var(--border)] bg-[var(--card)] px-4 text-[var(--ink)]"
             />
           </label>
 
           <div className="grid gap-4 md:grid-cols-2">
             <label className="grid gap-2 text-sm">
-              <span className="font-medium text-[#8b8ba0]">Urgency</span>
+              <span className="font-medium text-[var(--muted)]">Urgency</span>
               <select
                 name="urgency"
-                className="h-11 rounded-2xl border border-white/10 bg-[#262635] px-4 text-[#f1f1f4]"
+                className="h-11 rounded-[5px] border border-[var(--border)] bg-[var(--card)] px-4 text-[var(--ink)]"
                 defaultValue="HIGH"
               >
                 {Object.entries(urgencyLabels).map(([value, label]) => (
@@ -133,10 +133,10 @@ export function TicketIntakeForm({
               </select>
             </label>
             <label className="grid gap-2 text-sm">
-              <span className="font-medium text-[#8b8ba0]">Impact</span>
+              <span className="font-medium text-[var(--muted)]">Impact</span>
               <select
                 name="impact"
-                className="h-11 rounded-2xl border border-white/10 bg-[#262635] px-4 text-[#f1f1f4]"
+                className="h-11 rounded-[5px] border border-[var(--border)] bg-[var(--card)] px-4 text-[var(--ink)]"
                 defaultValue="DEPARTMENT"
               >
                 {Object.entries(impactLabels).map(([value, label]) => (
@@ -149,33 +149,33 @@ export function TicketIntakeForm({
           </div>
 
           <label className="grid gap-2 text-sm">
-            <span className="font-medium text-[#8b8ba0]">Description</span>
+            <span className="font-medium text-[var(--muted)]">Description</span>
             <textarea
               name="description"
               required
               rows={6}
               placeholder="Provide the operational impact, what the user sees, and any timing constraints."
-              className="rounded-2xl border border-white/10 bg-[#262635] px-4 py-3 text-[#f1f1f4]"
+              className="rounded-[5px] border border-[var(--border)] bg-[var(--card)] px-4 py-3 text-[var(--ink)]"
             />
           </label>
 
           <div className="grid gap-4 md:grid-cols-2">
             <label className="grid gap-2 text-sm">
-              <span className="font-medium text-[#8b8ba0]">Attachment Placeholder</span>
+              <span className="font-medium text-[var(--muted)]">Attachment Placeholder</span>
               <input
                 name="attachmentsNote"
                 placeholder="onboarding-checklist.pdf"
-                className="h-11 rounded-2xl border border-white/10 bg-[#262635] px-4 text-[#f1f1f4]"
+                className="h-11 rounded-[5px] border border-[var(--border)] bg-[var(--card)] px-4 text-[var(--ink)]"
               />
             </label>
-            <div className="rounded-2xl border border-white/6 bg-[#262635] px-4 py-3 text-sm text-[#8b8ba0]">
-              <div className="font-medium text-[#8b8ba0]">Created Time</div>
+            <div className="rounded-[5px] border border-[var(--border)] bg-[var(--card)] px-4 py-3 text-sm text-[var(--muted)]">
+              <div className="font-medium text-[var(--muted)]">Created Time</div>
               <div className="mt-1">Captured at submission time in the demo workflow.</div>
             </div>
           </div>
 
-          <div className="flex items-center justify-between gap-4 border-t border-white/6 pt-4">
-            <p className="max-w-2xl text-sm leading-6 text-[#8b8ba0]">
+          <div className="flex items-center justify-between gap-4 border-t border-[var(--border)] pt-4">
+            <p className="max-w-2xl text-sm leading-6 text-[var(--muted)]">
               On submit, the app runs deterministic triage, AI-assisted recommendations, SLA assignment,
               internal note generation, customer update drafting, and approval checks.
             </p>
@@ -192,15 +192,15 @@ export function TicketIntakeForm({
           {workflowLifecycle.map((step, index) => (
             <div
               key={step.title}
-              className="rounded-2xl border border-white/6 bg-[#262635]/70 p-4"
+              className="rounded-[5px] border border-[var(--border)] bg-[var(--card)] p-4"
             >
               <div className="flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#818cf8] text-sm font-semibold text-white">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--ink)] text-sm font-semibold text-white">
                   {index + 1}
                 </div>
-                <h3 className="text-sm font-semibold text-[#f1f1f4]">{step.title}</h3>
+                <h3 className="text-sm font-semibold text-[var(--ink)]">{step.title}</h3>
               </div>
-              <p className="mt-3 text-sm leading-6 text-[#8b8ba0]">{step.description}</p>
+              <p className="mt-3 text-sm leading-6 text-[var(--muted)]">{step.description}</p>
             </div>
           ))}
         </div>

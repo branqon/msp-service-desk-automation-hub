@@ -11,14 +11,14 @@ export default async function NewTicketPage() {
 
   return (
     <div className="grid gap-5">
-      <section className="rounded-3xl border border-white/70 bg-white/80 p-6 shadow-[0_20px_50px_-34px_rgba(15,23,42,0.45)] backdrop-blur">
+      <section className="rounded-[6px] border border-[var(--border)] bg-[var(--card)] p-6">
         <div className="space-y-4">
           <Badge tone="teal">Guided Intake</Badge>
           <div>
-            <h2 className="font-display text-4xl font-semibold tracking-tight text-slate-950">
+            <h2 className="text-4xl font-semibold tracking-tight text-[var(--ink)]">
               Capture incoming work the way an MSP dispatcher actually would
             </h2>
-            <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
+            <p className="mt-3 max-w-3xl text-sm leading-7 text-[var(--muted)]">
               The intake form feeds the same backend automation logic used by the seeded demo records.
               New submissions generate queue assignment, SLA targets, internal notes, customer drafts,
               and approvals when policy requires them.
@@ -35,12 +35,12 @@ export default async function NewTicketPage() {
       >
         <div className="grid gap-4 xl:grid-cols-2">
           {tickets.slice(0, 4).map((ticket) => (
-            <div key={ticket.id} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-              <div className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+            <div key={ticket.id} className="rounded-[5px] border border-[var(--border)] bg-[var(--background)] p-4">
+              <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--faint)]">
                 {ticket.ticketNumber}
               </div>
-              <div className="mt-2 font-medium text-slate-950">{ticket.subject}</div>
-              <div className="mt-1 text-sm text-slate-600">
+              <div className="mt-2 font-medium text-[var(--ink)]">{ticket.subject}</div>
+              <div className="mt-1 text-sm text-[var(--muted)]">
                 {ticket.company.name} · {issueTypeLabels[ticket.issueType]}
               </div>
               <div className="mt-3 flex flex-wrap gap-2 text-xs">
