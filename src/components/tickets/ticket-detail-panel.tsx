@@ -38,14 +38,14 @@ export function TicketDetailPanel({ ticket }: { ticket: TicketDetail }) {
         <div className="flex flex-col gap-5">
           <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
             <div className="space-y-3">
-              <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#5f5f78]">
+              <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--faint)]">
                 {ticket.ticketNumber}
               </div>
               <div>
-                <h2 className="text-2xl font-semibold tracking-tight text-[#f1f1f4]">
+                <h2 className="text-2xl font-semibold tracking-tight text-[var(--ink)]">
                   {ticket.subject}
                 </h2>
-                <p className="mt-2 max-w-3xl text-sm leading-6 text-[#8b8ba0]">
+                <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
                   {ticket.description}
                 </p>
               </div>
@@ -65,46 +65,46 @@ export function TicketDetailPanel({ ticket }: { ticket: TicketDetail }) {
           </div>
 
           <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-4">
-            <div className="min-w-0 rounded-2xl border border-white/6 bg-[#262635] p-4">
-              <div className="truncate text-xs font-semibold uppercase tracking-[0.18em] text-[#5f5f78]">
+            <div className="min-w-0 rounded-[5px] border border-[var(--border)] bg-[var(--card)] p-4">
+              <div className="truncate text-xs font-semibold uppercase tracking-[0.18em] text-[var(--faint)]">
                 Requester
               </div>
-              <div className="mt-2 text-sm font-medium text-[#f1f1f4]">
+              <div className="mt-2 text-sm font-medium text-[var(--ink)]">
                 {ticket.requester.name}
               </div>
-              <div className="text-sm text-[#8b8ba0]">
+              <div className="text-sm text-[var(--muted)]">
                 {ticket.requester.title} · {ticket.company.name}
               </div>
             </div>
-            <div className="min-w-0 rounded-2xl border border-white/6 bg-[#262635] p-4">
-              <div className="truncate text-xs font-semibold uppercase tracking-[0.16em] text-[#5f5f78]">
+            <div className="min-w-0 rounded-[5px] border border-[var(--border)] bg-[var(--card)] p-4">
+              <div className="truncate text-xs font-semibold uppercase tracking-[0.16em] text-[var(--faint)]">
                 Classification
               </div>
-              <div className="mt-2 text-sm font-medium text-[#f1f1f4]">
+              <div className="mt-2 text-sm font-medium text-[var(--ink)]">
                 {issueTypeLabels[ticket.issueType]}
               </div>
-              <div className="text-sm text-[#8b8ba0]">
+              <div className="text-sm text-[var(--muted)]">
                 {categoryLabels[ticket.category ?? ""] ?? "Pending"} ·{" "}
                 {queueLabels[ticket.suggestedQueue ?? ""] ?? "Pending"}
               </div>
             </div>
-            <div className="min-w-0 rounded-2xl border border-white/6 bg-[#262635] p-4">
-              <div className="truncate text-xs font-semibold uppercase tracking-[0.18em] text-[#5f5f78]">
+            <div className="min-w-0 rounded-[5px] border border-[var(--border)] bg-[var(--card)] p-4">
+              <div className="truncate text-xs font-semibold uppercase tracking-[0.18em] text-[var(--faint)]">
                 Timing
               </div>
-              <div className="mt-2 text-sm font-medium text-[#f1f1f4]">
+              <div className="mt-2 text-sm font-medium text-[var(--ink)]">
                 Created {formatRelativeTime(ticket.createdAt)}
               </div>
-              <div className="text-sm text-[#8b8ba0]">{formatDateTime(ticket.createdAt)}</div>
+              <div className="text-sm text-[var(--muted)]">{formatDateTime(ticket.createdAt)}</div>
             </div>
-            <div className="min-w-0 rounded-2xl border border-white/6 bg-[#262635] p-4">
-              <div className="truncate text-xs font-semibold uppercase tracking-[0.18em] text-[#5f5f78]">
+            <div className="min-w-0 rounded-[5px] border border-[var(--border)] bg-[var(--card)] p-4">
+              <div className="truncate text-xs font-semibold uppercase tracking-[0.18em] text-[var(--faint)]">
                 Automation
               </div>
-              <div className="mt-2 text-sm font-medium text-[#f1f1f4]">
+              <div className="mt-2 text-sm font-medium text-[var(--ink)]">
                 {formatMinutes(ticket.manualMinutesSaved)} saved
               </div>
-              <div className="text-sm text-[#8b8ba0]">
+              <div className="text-sm text-[var(--muted)]">
                 {ticket.customerUpdateReviewedAt
                   ? `Reviewed by ${ticket.customerUpdateReviewedBy}`
                   : "Drafts awaiting technician review"}
@@ -120,11 +120,11 @@ export function TicketDetailPanel({ ticket }: { ticket: TicketDetail }) {
           description="Deterministic routing is shown alongside AI-assisted recommendations so the decision path stays transparent."
         >
           <div className="grid gap-4 md:grid-cols-3">
-            <div className="min-w-0 rounded-2xl border border-white/6 bg-[#262635] p-4">
-              <div className="truncate text-xs font-semibold uppercase tracking-[0.12em] text-[#5f5f78]">
+            <div className="min-w-0 rounded-[5px] border border-[var(--border)] bg-[var(--card)] p-4">
+              <div className="truncate text-xs font-semibold uppercase tracking-[0.12em] text-[var(--faint)]">
                 Rule Engine
               </div>
-              <div className="mt-3 space-y-2 text-sm text-[#8b8ba0]">
+              <div className="mt-3 space-y-2 text-sm text-[var(--muted)]">
                 <div>{categoryLabels[ticket.ruleCategory ?? ""] ?? "Pending"}</div>
                 <div>{queueLabels[ticket.ruleQueue ?? ""] ?? "Pending"}</div>
                 <Badge tone={getPriorityTone(ticket.rulePriority)}>
@@ -132,26 +132,26 @@ export function TicketDetailPanel({ ticket }: { ticket: TicketDetail }) {
                 </Badge>
               </div>
             </div>
-            <div className="min-w-0 rounded-2xl border border-white/6 bg-[#262635] p-4">
-              <div className="truncate text-xs font-semibold uppercase tracking-[0.12em] text-[#5f5f78]">
+            <div className="min-w-0 rounded-[5px] border border-[var(--border)] bg-[var(--card)] p-4">
+              <div className="truncate text-xs font-semibold uppercase tracking-[0.12em] text-[var(--faint)]">
                 AI Recommendation
               </div>
-              <div className="mt-3 space-y-2 text-sm text-[#8b8ba0]">
+              <div className="mt-3 space-y-2 text-sm text-[var(--muted)]">
                 <div>{categoryLabels[ticket.aiSuggestedCategory ?? ""] ?? "Pending"}</div>
                 <div>{queueLabels[ticket.aiSuggestedQueue ?? ""] ?? "Pending"}</div>
                 <Badge tone={getPriorityTone(ticket.aiSuggestedPriority)}>
                   {priorityLabels[ticket.aiSuggestedPriority ?? ""] ?? "Pending"}
                 </Badge>
-                <div className="text-xs uppercase tracking-[0.16em] text-[#5f5f78]">
+                <div className="text-xs uppercase tracking-[0.16em] text-[var(--faint)]">
                   Confidence {Math.round((ticket.aiConfidence ?? 0) * 100)}%
                 </div>
               </div>
             </div>
-            <div className="min-w-0 rounded-2xl border border-indigo-400/20 bg-indigo-500/10 p-4">
-              <div className="truncate text-xs font-semibold uppercase tracking-[0.12em] text-indigo-400">
+            <div className="min-w-0 rounded-[5px] border border-[var(--ink)]/20 bg-[var(--ink)]/[0.03] p-4">
+              <div className="truncate text-xs font-semibold uppercase tracking-[0.12em] text-[var(--ink)]">
                 Final Route
               </div>
-              <div className="mt-3 space-y-2 text-sm text-[#e0e0ea]">
+              <div className="mt-3 space-y-2 text-sm text-[var(--ink-80)]">
                 <div>{categoryLabels[ticket.category ?? ""] ?? "Pending"}</div>
                 <div>{queueLabels[ticket.suggestedQueue ?? ""] ?? "Pending"}</div>
                 <Badge tone={getPriorityTone(ticket.priority)}>
@@ -160,7 +160,7 @@ export function TicketDetailPanel({ ticket }: { ticket: TicketDetail }) {
               </div>
             </div>
           </div>
-          <div className="mt-4 rounded-2xl border border-white/6 bg-[#1e1e2a] p-4 text-sm leading-6 text-[#8b8ba0]">
+          <div className="mt-4 rounded-[5px] border border-[var(--border)] bg-[var(--card)] p-4 text-sm leading-6 text-[var(--muted)]">
             {ticket.triageReasoning}
           </div>
         </SectionCard>
@@ -170,26 +170,26 @@ export function TicketDetailPanel({ ticket }: { ticket: TicketDetail }) {
           description="Priority, impact, and issue type drive timing targets and breach visibility."
         >
           <div className="grid gap-4">
-            <div className="rounded-2xl border border-white/6 bg-[#262635] p-4">
-              <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#5f5f78]">
+            <div className="rounded-[5px] border border-[var(--border)] bg-[var(--card)] p-4">
+              <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--faint)]">
                 Response Target
               </div>
-              <div className="mt-2 text-xl font-semibold text-[#f1f1f4]">
+              <div className="mt-2 text-xl font-semibold text-[var(--ink)]">
                 {ticket.slaProfile ? formatMinutes(ticket.slaProfile.responseTargetMinutes) : "Not set"}
               </div>
-              <div className="text-sm text-[#8b8ba0]">{formatDateTime(ticket.dueResponseAt)}</div>
+              <div className="text-sm text-[var(--muted)]">{formatDateTime(ticket.dueResponseAt)}</div>
             </div>
-            <div className="rounded-2xl border border-white/6 bg-[#262635] p-4">
-              <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#5f5f78]">
+            <div className="rounded-[5px] border border-[var(--border)] bg-[var(--card)] p-4">
+              <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--faint)]">
                 Resolution Target
               </div>
-              <div className="mt-2 text-xl font-semibold text-[#f1f1f4]">
+              <div className="mt-2 text-xl font-semibold text-[var(--ink)]">
                 {ticket.slaProfile ? formatMinutes(ticket.slaProfile.resolutionTargetMinutes) : "Not set"}
               </div>
-              <div className="text-sm text-[#8b8ba0]">{formatDateTime(ticket.dueResolutionAt)}</div>
+              <div className="text-sm text-[var(--muted)]">{formatDateTime(ticket.dueResolutionAt)}</div>
             </div>
-            <div className="rounded-2xl border border-white/6 bg-[#262635] p-4 text-sm leading-6 text-[#8b8ba0]">
-              <div className="font-semibold text-[#f1f1f4]">{ticket.slaProfile?.name}</div>
+            <div className="rounded-[5px] border border-[var(--border)] bg-[var(--card)] p-4 text-sm leading-6 text-[var(--muted)]">
+              <div className="font-semibold text-[var(--ink)]">{ticket.slaProfile?.name}</div>
               <div>{ticket.slaProfile?.escalationPolicy}</div>
             </div>
           </div>
@@ -202,35 +202,35 @@ export function TicketDetailPanel({ ticket }: { ticket: TicketDetail }) {
           description="Operationally useful outputs that reduce triage and communication overhead for the service desk."
         >
           <div className="grid gap-4">
-            <div className="rounded-2xl border border-white/6 bg-[#262635] p-4">
-              <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#5f5f78]">
+            <div className="rounded-[5px] border border-[var(--border)] bg-[var(--card)] p-4">
+              <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--faint)]">
                 Internal Summary
               </div>
-              <p className="mt-3 text-sm leading-6 text-[#8b8ba0]">{ticket.internalSummary}</p>
+              <p className="mt-3 text-sm leading-6 text-[var(--muted)]">{ticket.internalSummary}</p>
             </div>
             <div className="grid gap-4 md:grid-cols-2">
-              <div className="rounded-2xl border border-white/6 bg-[#262635] p-4">
-                <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#5f5f78]">
+              <div className="rounded-[5px] border border-[var(--border)] bg-[var(--card)] p-4">
+                <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--faint)]">
                   Probable Root Cause
                 </div>
-                <p className="mt-3 text-sm leading-6 text-[#8b8ba0]">
+                <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
                   {ticket.probableRootCause}
                 </p>
               </div>
-              <div className="rounded-2xl border border-white/6 bg-[#262635] p-4">
-                <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#5f5f78]">
+              <div className="rounded-[5px] border border-[var(--border)] bg-[var(--card)] p-4">
+                <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--faint)]">
                   Recommended Next Step
                 </div>
-                <p className="mt-3 text-sm leading-6 text-[#8b8ba0]">
+                <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
                   {ticket.recommendedNextStep}
                 </p>
               </div>
             </div>
-            <div className="rounded-2xl border border-white/6 bg-[#262635] p-4">
-              <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#5f5f78]">
+            <div className="rounded-[5px] border border-[var(--border)] bg-[var(--card)] p-4">
+              <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--faint)]">
                 Escalation Guidance
               </div>
-              <p className="mt-3 text-sm leading-6 text-[#8b8ba0]">
+              <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
                 {ticket.escalationSuggestion}
               </p>
             </div>
@@ -241,22 +241,22 @@ export function TicketDetailPanel({ ticket }: { ticket: TicketDetail }) {
           title="Ticket Context"
           description="Operational context used by the workflow engine for routing and reporting."
         >
-          <div className="grid gap-3 text-sm text-[#8b8ba0]">
-            <div className="flex items-center justify-between rounded-2xl border border-white/6 bg-[#262635] px-4 py-3">
+          <div className="grid gap-3 text-sm text-[var(--muted)]">
+            <div className="flex items-center justify-between rounded-[5px] border border-[var(--border)] bg-[var(--card)] px-4 py-3">
               <span>Urgency</span>
               <span className="font-medium">{urgencyLabels[ticket.urgency]}</span>
             </div>
-            <div className="flex items-center justify-between rounded-2xl border border-white/6 bg-[#262635] px-4 py-3">
+            <div className="flex items-center justify-between rounded-[5px] border border-[var(--border)] bg-[var(--card)] px-4 py-3">
               <span>Impact</span>
               <span className="font-medium">{impactLabels[ticket.impact]}</span>
             </div>
-            <div className="flex items-center justify-between rounded-2xl border border-white/6 bg-[#262635] px-4 py-3">
+            <div className="flex items-center justify-between rounded-[5px] border border-[var(--border)] bg-[var(--card)] px-4 py-3">
               <span>Sentiment</span>
               <span className="font-medium">
                 {sentimentLabels[ticket.sentiment ?? ""] ?? "Pending"}
               </span>
             </div>
-            <div className="flex items-center justify-between rounded-2xl border border-white/6 bg-[#262635] px-4 py-3">
+            <div className="flex items-center justify-between rounded-[5px] border border-[var(--border)] bg-[var(--card)] px-4 py-3">
               <span>Attachments</span>
               <span className="font-medium">{ticket.attachments.length}</span>
             </div>
@@ -289,14 +289,14 @@ export function TicketDetailPanel({ ticket }: { ticket: TicketDetail }) {
         >
           <div className="space-y-3">
             {ticket.approvals.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-white/10 bg-[#262635] p-4 text-sm text-[#8b8ba0]">
+              <div className="rounded-[5px] border border-dashed border-[var(--border)] bg-[var(--card)] p-4 text-sm text-[var(--muted)]">
                 No approvals recorded for this ticket yet.
               </div>
             ) : (
               ticket.approvals.map((approval) => (
                 <div
                   key={approval.id}
-                  className="rounded-2xl border border-white/6 bg-[#262635] p-4"
+                  className="rounded-[5px] border border-[var(--border)] bg-[var(--card)] p-4"
                 >
                   <div className="flex flex-wrap items-center gap-2">
                     <Badge tone="amber">
@@ -314,10 +314,10 @@ export function TicketDetailPanel({ ticket }: { ticket: TicketDetail }) {
                       {approvalStatusLabels[approval.status] ?? approval.status}
                     </Badge>
                   </div>
-                  <div className="mt-3 text-sm leading-6 text-[#8b8ba0]">
+                  <div className="mt-3 text-sm leading-6 text-[var(--muted)]">
                     <div>Requested by {approval.requestedBy}</div>
                     <div>{approval.reason}</div>
-                    <div className="text-[#5f5f78]">
+                    <div className="text-[var(--faint)]">
                       {formatDateTime(approval.requestedAt)}
                       {approval.approverName ? ` · ${approval.approverName}` : ""}
                     </div>
@@ -336,12 +336,12 @@ export function TicketDetailPanel({ ticket }: { ticket: TicketDetail }) {
             {ticket.workflowRuns.map((run) => (
               <div
                 key={run.id}
-                className="rounded-2xl border border-white/6 bg-[#262635] p-4"
+                className="rounded-[5px] border border-[var(--border)] bg-[var(--card)] p-4"
               >
                 <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
                   <div>
-                    <div className="font-medium text-[#f1f1f4]">{run.workflowName}</div>
-                    <div className="text-sm text-[#8b8ba0]">{run.summary}</div>
+                    <div className="font-medium text-[var(--ink)]">{run.workflowName}</div>
+                    <div className="text-sm text-[var(--muted)]">{run.summary}</div>
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
                     <Badge tone={getSourceTone(run.source)}>
@@ -350,7 +350,7 @@ export function TicketDetailPanel({ ticket }: { ticket: TicketDetail }) {
                     <Badge tone="slate">{run.status}</Badge>
                   </div>
                 </div>
-                <div className="mt-3 text-xs uppercase tracking-[0.16em] text-[#5f5f78]">
+                <div className="mt-3 text-xs uppercase tracking-[0.16em] text-[var(--faint)]">
                   {formatDateTime(run.startedAt)}
                 </div>
               </div>
@@ -367,19 +367,19 @@ export function TicketDetailPanel({ ticket }: { ticket: TicketDetail }) {
           {ticket.auditEvents.map((event) => (
             <div
               key={event.id}
-              className="grid gap-3 rounded-2xl border border-white/6 bg-[#262635] p-4 md:grid-cols-[auto_1fr_auto]"
+              className="grid gap-3 rounded-[5px] border border-[var(--border)] bg-[var(--card)] p-4 md:grid-cols-[auto_1fr_auto]"
             >
               <Badge tone={getSourceTone(event.source)}>
                 {sourceLabels[event.source] ?? event.source}
               </Badge>
               <div>
-                <div className="font-medium text-[#f1f1f4]">{event.action}</div>
-                <div className="mt-1 text-sm leading-6 text-[#8b8ba0]">{event.details}</div>
-                <div className="mt-2 text-xs uppercase tracking-[0.16em] text-[#5f5f78]">
+                <div className="font-medium text-[var(--ink)]">{event.action}</div>
+                <div className="mt-1 text-sm leading-6 text-[var(--muted)]">{event.details}</div>
+                <div className="mt-2 text-xs uppercase tracking-[0.16em] text-[var(--faint)]">
                   {event.actorName}
                 </div>
               </div>
-              <div className="text-xs uppercase tracking-[0.16em] text-[#5f5f78]">
+              <div className="text-xs uppercase tracking-[0.16em] text-[var(--faint)]">
                 {formatDateTime(event.createdAt)}
               </div>
             </div>
