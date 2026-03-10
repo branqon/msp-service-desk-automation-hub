@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Activity, Bot, Clock3, Inbox, ShieldCheck, TimerReset } from "lucide-react";
 
 import { DashboardCharts } from "@/components/charts/dashboard-charts";
 import { MetricCard } from "@/components/metric-card";
@@ -38,43 +37,31 @@ export default async function Home() {
           label="Tickets Processed"
           value={String(dashboard.totals.ticketsProcessed)}
           detail="Seeded intake volume spanning identity, network, procurement, security, and application support."
-          badge="Realistic MSP dataset"
-          icon={<Activity className="h-5 w-5" />}
         />
         <MetricCard
           label="Auto-Triage Rate"
           value={formatPercent(dashboard.totals.autoTriageRate)}
           detail="Tickets routed through a deterministic ruleset plus AI recommendation overlay."
-          badge="Rule + AI blend"
-          icon={<Bot className="h-5 w-5" />}
         />
         <MetricCard
           label="Approval Rate"
           value={formatPercent(dashboard.totals.approvalRate)}
           detail="Approved decisions across procurement, tier 3 escalation, and controlled closure requests."
-          badge="Human-in-the-loop"
-          icon={<ShieldCheck className="h-5 w-5" />}
         />
         <MetricCard
           label="Manual Minutes Saved"
           value={formatMinutes(dashboard.totals.manualMinutesSaved)}
           detail="Estimated time saved from automation-generated triage, drafts, and notes."
-          badge="Operational efficiency"
-          icon={<Clock3 className="h-5 w-5" />}
         />
         <MetricCard
           label="SLA Compliance"
           value={formatPercent(dashboard.totals.slaCompliance)}
           detail="Calculated across resolved, closed, and currently open tickets with live due dates."
-          badge="Time-based reporting"
-          icon={<TimerReset className="h-5 w-5" />}
         />
         <MetricCard
           label="Pending Approvals"
           value={String(dashboard.totals.pendingApprovals)}
           detail="Sensitive actions waiting for human review before proceeding through the workflow."
-          badge="Approval gate"
-          icon={<Inbox className="h-5 w-5" />}
         />
       </div>
 
