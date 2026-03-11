@@ -1,6 +1,6 @@
 # MSP Service Desk Automation Hub
 
-AI-assisted service desk automation platform demonstrating triage, SLA routing, approval workflows, and operational analytics. Built to show how an MSP can blend deterministic service desk logic with AI-assisted triage, note generation, customer communication, and approval gates — reducing repetitive dispatcher and technician work while keeping sensitive actions human-approved and inspectable.
+AI-assisted service desk automation platform demonstrating triage, SLA routing, approval workflows, and operational analytics. Built to show how an MSP can blend deterministic service desk logic with AI-assisted triage, note generation, customer communication, and approval gates while reducing repetitive dispatcher and technician work and keeping sensitive actions human-approved and inspectable.
 
 ## Screenshots
 
@@ -17,8 +17,8 @@ AI-assisted service desk automation platform demonstrating triage, SLA routing, 
 - Ticket intake screen with requester, company, issue type, urgency, impact, description, and attachment placeholder fields
 - Triage engine that shows rule-based routing and AI-assisted recommendations side by side
 - SLA routing based on priority and issue type, with visible response and resolution targets
-- AI-generated technician notes including probable root cause, next step, and escalation guidance
-- AI-generated customer update drafts with explicit human review before send
+- AI-assisted technician notes including probable root cause, next step, and escalation guidance
+- AI-assisted customer update drafts with explicit human review before send
 - Approval workflow simulation for procurement, tier 3 escalation, and controlled closure
 - Workflow history and audit trail for rule-based, AI-assisted, human-approved, and manual actions
 - Metrics dashboard with realistic seeded data and reporting
@@ -54,11 +54,11 @@ Related docs:
 - Recharts
 - Zod
 - Playwright
-- Mock AI provider abstraction
+- Pluggable AI provider abstraction with a heuristic mock implementation
 
 ## Demo Walkthrough
 
-1. Start on the dashboard and explain the KPI story: auto-triage rate, approvals, time saved, SLA compliance.
+1. Start on the dashboard and explain the KPI story: processed volume, AI-influenced routes, approvals, time saved, and SLA compliance.
 2. Open the queue workbench and select a ticket that shows both rule-based and AI-assisted routing.
 3. Review the ticket detail panel: SLA, internal note, customer update draft, workflow history, and audit trail.
 4. Switch to the approvals page and show a pending approval plus a historical decision.
@@ -93,6 +93,7 @@ Then open `http://localhost:3000`.
 ### Run Tests
 
 ```bash
+npm run lint
 npm test
 ```
 

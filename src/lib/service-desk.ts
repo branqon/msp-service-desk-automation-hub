@@ -174,6 +174,33 @@ function buildWorkflowTimes(referenceTime: Date) {
   };
 }
 
+function matchesRoute(
+  ticket: {
+    category: string | null;
+    priority: string | null;
+    suggestedQueue: string | null;
+  },
+  route: {
+    category: string | null;
+    priority: string | null;
+    queue: string | null;
+  },
+) {
+  return (
+    ticket.category === route.category &&
+    ticket.priority === route.priority &&
+    ticket.suggestedQueue === route.queue
+  );
+}
+
+function hasRoute(route: {
+  category: string | null;
+  priority: string | null;
+  queue: string | null;
+}) {
+  return route.category !== null && route.priority !== null && route.queue !== null;
+}
+
 export async function getCompanies() {
   return prisma.company.findMany({
     orderBy: { name: "asc" },
@@ -679,11 +706,13 @@ export async function decideApproval(
 }
 
 export async function getDashboardData() {
+  const generatedAt = new Date();
   const [tickets, approvals, opportunities] = await Promise.all([
     prisma.ticket.findMany({
       include: {
         company: true,
         approvals: true,
+        slaProfile: true,
         workflowRuns: true,
       },
       orderBy: { createdAt: "desc" },
@@ -693,15 +722,78 @@ export async function getDashboardData() {
   ]);
 
   const totalTickets = tickets.length;
-  const autoTriaged = tickets.filter((ticket) =>
-    ticket.workflowRuns.some((workflow) => workflow.triggerType === WorkflowTrigger.TRIAGE),
-  ).length;
+  const openTickets = [...tickets]
+    .filter((ticket) => !isClosedStatus(ticket.status))
+    .sort((left, right) => {
+      const leftDue = left.dueResolutionAt?.getTime() ?? Number.MAX_SAFE_INTEGER;
+      const rightDue = right.dueResolutionAt?.getTime() ?? Number.MAX_SAFE_INTEGER;
+
+      if (leftDue !== rightDue) {
+        return leftDue - rightDue;
+      }
+
+      return right.createdAt.getTime() - left.createdAt.getTime();
+    });
+  const aiInfluencedTickets = tickets.filter((ticket) => {
+    const ruleRoute = {
+      category: ticket.ruleCategory,
+      priority: ticket.rulePriority,
+      queue: ticket.ruleQueue,
+    };
+    const aiRoute = {
+      category: ticket.aiSuggestedCategory,
+      priority: ticket.aiSuggestedPriority,
+      queue: ticket.aiSuggestedQueue,
+    };
+
+    return (
+      hasRoute(ruleRoute) &&
+      hasRoute(aiRoute) &&
+      !matchesRoute(
+        {
+          category: ruleRoute.category,
+          priority: ruleRoute.priority,
+          suggestedQueue: ruleRoute.queue,
+        },
+        aiRoute,
+      ) &&
+      matchesRoute(ticket, aiRoute)
+    );
+  }).length;
+  const aiDivergenceCount = openTickets.filter((ticket) => {
+    const ruleRoute = {
+      category: ticket.ruleCategory,
+      priority: ticket.rulePriority,
+      queue: ticket.ruleQueue,
+    };
+    const aiRoute = {
+      category: ticket.aiSuggestedCategory,
+      priority: ticket.aiSuggestedPriority,
+      queue: ticket.aiSuggestedQueue,
+    };
+
+    return (
+      hasRoute(ruleRoute) &&
+      hasRoute(aiRoute) &&
+      !matchesRoute(
+        {
+          category: ruleRoute.category,
+          priority: ruleRoute.priority,
+          suggestedQueue: ruleRoute.queue,
+        },
+        aiRoute,
+      )
+    );
+  }).length;
   const approvedCount = approvals.filter(
     (approval) => approval.status === ApprovalStatus.APPROVED,
   ).length;
-  const pendingApprovals = approvals.filter(
-    (approval) => approval.status === ApprovalStatus.PENDING,
+  const decidedApprovals = approvals.filter(
+    (approval) => approval.status !== ApprovalStatus.PENDING,
   ).length;
+  const pendingApprovalRecords = approvals.filter(
+    (approval) => approval.status === ApprovalStatus.PENDING,
+  );
   const manualMinutesSaved = tickets.reduce(
     (total, ticket) => total + ticket.manualMinutesSaved,
     0,
@@ -715,11 +807,37 @@ export async function getDashboardData() {
       return ticket.updatedAt.getTime() <= ticket.dueResolutionAt.getTime();
     }
 
-    return !isOverdue(ticket.dueResolutionAt, ticket.status);
+    return !isOverdue(ticket.dueResolutionAt, ticket.status, generatedAt);
   }).length;
+  const approvalAging = { over72: 0, h24to72: 0, h4to24: 0, under4: 0 };
+
+  for (const approval of pendingApprovalRecords) {
+    const hoursWaiting =
+      (generatedAt.getTime() - approval.requestedAt.getTime()) / 3_600_000;
+
+    if (hoursWaiting > 72) {
+      approvalAging.over72++;
+    } else if (hoursWaiting > 24) {
+      approvalAging.h24to72++;
+    } else if (hoursWaiting > 4) {
+      approvalAging.h4to24++;
+    } else {
+      approvalAging.under4++;
+    }
+  }
+
+  const oldestPendingApprovalDays =
+    pendingApprovalRecords.length === 0
+      ? 0
+      : Math.max(
+          ...pendingApprovalRecords.map(
+            (approval) =>
+              (generatedAt.getTime() - approval.requestedAt.getTime()) / 86_400_000,
+          ),
+        );
 
   const lastSevenDays = Array.from({ length: 7 }, (_, index) =>
-    startOfDay(subDays(new Date(), 6 - index)),
+    startOfDay(subDays(generatedAt, 6 - index)),
   );
   const ticketsByDay = lastSevenDays.map((day) => {
     const nextDay = addMinutes(day, 1440);
@@ -760,23 +878,72 @@ export async function getDashboardData() {
     .map(([category, volume]) => ({ category, volume }))
     .sort((left, right) => right.volume - left.volume);
 
-  const overdueTickets = tickets.filter((ticket) =>
-    isOverdue(ticket.dueResolutionAt, ticket.status),
+  const heatMap = new Map<
+    string,
+    { queue: string; p1p2: number; p3: number; p4: number; breach: number }
+  >();
+
+  for (const ticket of openTickets) {
+    const queueName = ticket.suggestedQueue ?? "UNASSIGNED";
+    const row = heatMap.get(queueName) ?? {
+      queue: queueName,
+      p1p2: 0,
+      p3: 0,
+      p4: 0,
+      breach: 0,
+    };
+
+    if (isOverdue(ticket.dueResolutionAt, ticket.status, generatedAt)) {
+      row.breach++;
+    }
+
+    if (ticket.priority === "P1_CRITICAL" || ticket.priority === "P2_HIGH") {
+      row.p1p2++;
+    } else if (ticket.priority === "P3_MEDIUM") {
+      row.p3++;
+    } else {
+      row.p4++;
+    }
+
+    heatMap.set(queueName, row);
+  }
+
+  const overdueTickets = openTickets.filter((ticket) =>
+    isOverdue(ticket.dueResolutionAt, ticket.status, generatedAt),
   );
+  const activeQueues = new Set(
+    openTickets.map((ticket) => ticket.suggestedQueue).filter(Boolean),
+  ).size;
 
   return {
+    generatedAt,
+    lastTicketReceivedAt: tickets[0]?.createdAt ?? null,
     totals: {
       ticketsProcessed: totalTickets,
-      autoTriageRate: totalTickets === 0 ? 0 : (autoTriaged / totalTickets) * 100,
+      aiInfluencedTickets,
+      aiInfluenceRate:
+        totalTickets === 0 ? 0 : (aiInfluencedTickets / totalTickets) * 100,
       approvalRate:
-        approvals.length === 0 ? 0 : (approvedCount / approvals.length) * 100,
+        decidedApprovals === 0 ? 0 : (approvedCount / decidedApprovals) * 100,
       manualMinutesSaved,
       slaCompliance: totalTickets === 0 ? 0 : (slaCompliant / totalTickets) * 100,
-      pendingApprovals,
+      pendingApprovals: pendingApprovalRecords.length,
       overdueTickets: overdueTickets.length,
       automationCandidates: opportunities.filter(
         (opportunity) => opportunity.automationFitScore >= 75,
       ).length,
+    },
+    queueSnapshot: {
+      openTickets: openTickets.length,
+      activeQueues,
+      oldestPendingApprovalDays,
+      approvalAging,
+      aiDivergenceCount,
+      heatRows: [...heatMap.values()].sort(
+        (left, right) =>
+          right.breach + right.p1p2 - (left.breach + left.p1p2),
+      ),
+      tickets: openTickets.slice(0, 6),
     },
     ticketsByDay,
     queueBreakdown,
@@ -786,7 +953,7 @@ export async function getDashboardData() {
       .filter((ticket) => ticket.riskLevel === "CRITICAL" || ticket.riskLevel === "HIGH")
       .slice(0, 5),
     approvalsSnapshot: {
-      pending: pendingApprovals,
+      pending: pendingApprovalRecords.length,
       approved: approvedCount,
       rejected: approvals.filter((approval) => approval.status === ApprovalStatus.REJECTED)
         .length,

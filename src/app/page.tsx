@@ -6,27 +6,31 @@ import { Badge } from "@/components/ui/badge";
 import { buttonStyles } from "@/components/ui/button";
 import {
   getStatusTone,
-  priorityLabels,
   queueLabels,
   statusLabels,
 } from "@/lib/constants";
 import { getDashboardData } from "@/lib/service-desk";
 import {
   cn,
-  formatRelativeTime,
+  formatMinutes,
+  formatPercent,
+  formatRelativeTimeFrom,
   isClosedStatus,
-  isOverdue,
 } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
 /* ---------- helpers ---------- */
 
-function slaCountdown(dueAt: Date | string | null | undefined, status: string) {
+function slaCountdown(
+  dueAt: Date | string | null | undefined,
+  status: string,
+  referenceTime: Date | string,
+) {
   if (!dueAt) return { text: "No SLA", tone: "done" as const };
   if (isClosedStatus(status)) return { text: "Closed", tone: "done" as const };
 
-  const diffMs = new Date(dueAt).getTime() - Date.now();
+  const diffMs = new Date(dueAt).getTime() - new Date(referenceTime).getTime();
   const diffMin = diffMs / 60_000;
 
   if (diffMin < 0) {
@@ -40,14 +44,12 @@ function slaCountdown(dueAt: Date | string | null | undefined, status: string) {
   return { text: `${Math.round(diffMin / 1440)}d left`, tone: "ok" as const };
 }
 
-function slaTarget(priority: string | null | undefined) {
-  switch (priority) {
-    case "P1_CRITICAL": return "P1 \u00b7 4h target";
-    case "P2_HIGH": return "P2 \u00b7 8h target";
-    case "P3_MEDIUM": return "P3 \u00b7 72h target";
-    case "P4_LOW": return "P4 \u00b7 120h target";
-    default: return "";
+function slaTarget(resolutionTargetMinutes: number | null | undefined) {
+  if (!resolutionTargetMinutes) {
+    return "";
   }
+
+  return `${formatMinutes(resolutionTargetMinutes)} target`;
 }
 
 function aiConfidenceLabel(confidence: number | null | undefined) {
@@ -75,56 +77,23 @@ function queueShortLabel(queue: string | null | undefined) {
 
 export default async function Home() {
   const dashboard = await getDashboardData();
-  const tickets = dashboard.recentTickets;
+  const generatedAt = dashboard.generatedAt;
+  const queueSnapshot = dashboard.queueSnapshot;
+  const tickets = queueSnapshot.tickets;
 
-  const openTickets = tickets.filter((t) => !isClosedStatus(t.status));
-  const uniqueQueues = new Set(tickets.map((t) => t.suggestedQueue).filter(Boolean));
-  const lastTicket = tickets[0];
-  const contextText = `${openTickets.length} open tickets across ${uniqueQueues.size} queues` +
-    (lastTicket ? ` \u00b7 last ticket received ${formatRelativeTime(lastTicket.createdAt)}` : "");
+  const lastTicketReceivedAt = dashboard.lastTicketReceivedAt;
+  const contextText =
+    `${queueSnapshot.openTickets} open tickets across ${queueSnapshot.activeQueues} queues` +
+    (lastTicketReceivedAt
+      ? ` \u00b7 last ticket received ${formatRelativeTimeFrom(lastTicketReceivedAt, generatedAt)}`
+      : "");
 
-  // Compute triage-console metrics from dashboard data
-  const autoTriaged = Math.round(
-    (dashboard.totals.autoTriageRate / 100) * dashboard.totals.ticketsProcessed,
-  );
   const slaAtRisk = dashboard.totals.overdueTickets;
   const timeSavedHours = (dashboard.totals.manualMinutesSaved / 60).toFixed(1);
-  const breachedCount = tickets.filter((t) => isOverdue(t.dueResolutionAt, t.status)).length;
-
-  // Approval aging buckets
-  const pendingApprovals = tickets.flatMap((t) =>
-    t.approvals.filter((a) => a.status === "PENDING"),
-  );
-  const now = Date.now();
-  const agingBuckets = { over72: 0, h24to72: 0, h4to24: 0, under4: 0 };
-  for (const a of pendingApprovals) {
-    const hoursWaiting = (now - new Date(a.requestedAt).getTime()) / 3_600_000;
-    if (hoursWaiting > 72) agingBuckets.over72++;
-    else if (hoursWaiting > 24) agingBuckets.h24to72++;
-    else if (hoursWaiting > 4) agingBuckets.h4to24++;
-    else agingBuckets.under4++;
-  }
-
-  // SLA heatmap data: queue x priority tier, plus breach column
-  type HeatRow = { queue: string; p1p2: number; p3: number; p4: number; breach: number };
-  const heatMap = new Map<string, HeatRow>();
-  for (const t of tickets) {
-    if (isClosedStatus(t.status)) continue;
-    const q = queueShortLabel(t.suggestedQueue);
-    if (!heatMap.has(q)) heatMap.set(q, { queue: q, p1p2: 0, p3: 0, p4: 0, breach: 0 });
-    const row = heatMap.get(q)!;
-    const breached = isOverdue(t.dueResolutionAt, t.status);
-    if (breached) row.breach++;
-    if (t.priority === "P1_CRITICAL" || t.priority === "P2_HIGH") row.p1p2++;
-    else if (t.priority === "P3_MEDIUM") row.p3++;
-    else row.p4++;
-  }
-  const heatRows = [...heatMap.values()].sort((a, b) => (b.breach + b.p1p2) - (a.breach + a.p1p2));
-
-  // Manual overrides: tickets where AI and final queue diverge
-  const overrides = tickets.filter(
-    (t) => t.aiSuggestedQueue && t.suggestedQueue && t.aiSuggestedQueue !== t.suggestedQueue,
-  ).length;
+  const heatRows = queueSnapshot.heatRows.map((row) => ({
+    ...row,
+    queue: queueShortLabel(row.queue),
+  }));
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -149,24 +118,20 @@ export default async function Home() {
       {/* ---- Metrics strip ---- */}
       <div className="grid grid-cols-5 border-b border-[var(--border)] bg-[var(--card)]">
         <MetricCard
-          label="Auto-Triaged"
-          value={autoTriaged}
-          unit={`of ${dashboard.totals.ticketsProcessed}`}
-          detail={`${dashboard.totals.ticketsProcessed - autoTriaged} required manual routing`}
+          label="Tickets Processed"
+          value={dashboard.totals.ticketsProcessed}
+          detail={`${dashboard.totals.aiInfluencedTickets} AI-influenced routes`}
         />
         <MetricCard
           label="Approvals Blocked"
           value={dashboard.totals.pendingApprovals}
           tone={dashboard.totals.pendingApprovals > 0 ? "amber" : "default"}
           detail={
-            pendingApprovals.length > 0
-              ? `Oldest waiting ${Math.round(
-                  Math.max(
-                    ...pendingApprovals.map(
-                      (a) => (now - new Date(a.requestedAt).getTime()) / 86_400_000,
-                    ),
-                  ),
-                )} days`
+            dashboard.totals.pendingApprovals > 0
+              ? `Oldest waiting ${Math.max(
+                  1,
+                  Math.round(queueSnapshot.oldestPendingApprovalDays),
+                )} day${Math.round(queueSnapshot.oldestPendingApprovalDays) === 1 ? "" : "s"}`
               : "None pending"
           }
         />
@@ -174,22 +139,19 @@ export default async function Home() {
           label="SLA At Risk"
           value={slaAtRisk}
           tone={slaAtRisk > 0 ? "red" : "default"}
-          detail={
-            breachedCount > 0
-              ? `${breachedCount} breached`
-              : "All within target"
-          }
+          detail={`${formatPercent(dashboard.totals.slaCompliance)} within target`}
         />
         <MetricCard
-          label="Time Saved This Week"
+          label="Estimated Time Saved"
           value={timeSavedHours}
           unit="hrs"
-          detail="vs. full-manual triage"
+          detail="Across processed tickets"
         />
         <MetricCard
-          label="Manual Overrides"
-          value={overrides}
-          detail={overrides > 0 ? "AI suggestion changed by ops" : "No overrides"}
+          label="AI / Rule Divergence"
+          value={queueSnapshot.aiDivergenceCount}
+          tone={queueSnapshot.aiDivergenceCount > 0 ? "amber" : "default"}
+          detail="Open tickets where AI and baseline rules disagree"
         />
       </div>
 
@@ -202,7 +164,7 @@ export default async function Home() {
           </span>
         </div>
         <div className="mb-5 grid grid-cols-[1fr_1.1fr] gap-3">
-          <ApprovalAging buckets={agingBuckets} />
+          <ApprovalAging buckets={queueSnapshot.approvalAging} />
           <SlaRiskHeatmap rows={heatRows} />
         </div>
 
@@ -237,7 +199,7 @@ export default async function Home() {
 
           {/* Table rows */}
           {tickets.map((ticket, i) => {
-            const sla = slaCountdown(ticket.dueResolutionAt, ticket.status);
+            const sla = slaCountdown(ticket.dueResolutionAt, ticket.status, generatedAt);
             const isBreach = sla.tone === "overdue";
             const conf = aiConfidenceLabel(ticket.aiConfidence);
             const seqNum = String(i + 1).padStart(3, "0");
@@ -275,7 +237,7 @@ export default async function Home() {
                   <div className="mt-0.5 text-[10.5px] leading-[1.4] text-[var(--faint)]">
                     {ticket.company.name} &middot;{" "}
                     {queueShortLabel(ticket.suggestedQueue)} &middot;{" "}
-                    {formatRelativeTime(ticket.createdAt)}
+                    {formatRelativeTimeFrom(ticket.createdAt, generatedAt)}
                   </div>
                   {ticket.recommendedNextStep && (
                     <div className="mt-0.5 text-[10.5px] italic leading-[1.4] text-[var(--muted)]">
@@ -305,7 +267,7 @@ export default async function Home() {
                     {sla.text}
                   </div>
                   <div className="mt-px text-[9.5px] text-[var(--faint)]">
-                    {slaTarget(ticket.priority)}
+                    {slaTarget(ticket.slaProfile?.resolutionTargetMinutes)}
                   </div>
                 </div>
 
@@ -373,24 +335,24 @@ export default async function Home() {
             {" \u2014 "}Deterministic routing with AI-assisted decision support
           </div>
           <nav className="flex gap-5">
-            <a
-              href="https://github.com"
+            <Link
+              href="/tickets"
               className="text-[10px] font-medium uppercase tracking-[0.06em] text-[var(--faint)] transition-colors hover:text-[var(--ink-60)]"
             >
-              GitHub
-            </a>
-            <a
-              href="#"
+              Workbench
+            </Link>
+            <Link
+              href="/approvals"
               className="text-[10px] font-medium uppercase tracking-[0.06em] text-[var(--faint)] transition-colors hover:text-[var(--ink-60)]"
             >
-              Architecture
-            </a>
-            <a
-              href="#"
+              Approvals
+            </Link>
+            <Link
+              href="/automation-opportunities"
               className="text-[10px] font-medium uppercase tracking-[0.06em] text-[var(--faint)] transition-colors hover:text-[var(--ink-60)]"
             >
-              Docs
-            </a>
+              Automation Review
+            </Link>
           </nav>
         </div>
       </footer>

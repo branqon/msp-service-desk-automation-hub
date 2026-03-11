@@ -6,10 +6,12 @@ import { fileURLToPath } from "node:url";
 const rootDir = fileURLToPath(new URL("../", import.meta.url));
 const prismaDir = resolve(rootDir, "prisma");
 const databaseFile = resolve(prismaDir, "e2e.db");
+const e2eDistDir = resolve(rootDir, ".next-e2e");
 const command = process.platform === "win32" ? "npx.cmd" : "npx";
 const sharedEnv = {
   ...process.env,
   DATABASE_URL: "file:./e2e.db",
+  NEXT_DIST_DIR: ".next-e2e",
 };
 
 function removeDatabaseArtifacts() {
@@ -41,6 +43,7 @@ function runStep(args) {
 }
 
 removeDatabaseArtifacts();
+rmSync(e2eDistDir, { recursive: true, force: true });
 runStep(["prisma", "db", "push", "--skip-generate"]);
 runStep(["prisma", "db", "seed"]);
 

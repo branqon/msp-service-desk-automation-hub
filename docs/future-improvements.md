@@ -22,7 +22,7 @@
 
 ## Technical
 
-- Add automated tests for triage logic and approval workflows
+- Expand automated coverage for API routes, dashboard aggregations, and negative-path approval flows
 - Add pagination and server-side filtering for larger datasets
 - Offer Postgres as an alternate production-style runtime profile
 - Introduce background job processing for report generation and notifications

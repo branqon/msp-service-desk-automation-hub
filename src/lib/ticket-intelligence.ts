@@ -12,6 +12,8 @@ import {
 } from "@prisma/client";
 import { addMinutes } from "date-fns";
 
+import { buildHeuristicRecommendation } from "@/lib/triage-heuristics";
+
 interface Blueprint {
   category: TicketCategory;
   queue: SupportQueue;
@@ -270,80 +272,6 @@ export function inferRisk(
   return "LOW";
 }
 
-// Inline heuristic overlay used by the synchronous pipeline.
-// See ai-provider.ts for the AIProvider interface that shows where a real
-// LLM would plug in without changing the deterministic triage path.
-function buildAiOverlay(
-  context: AutomationContext,
-  rulePriority: Priority,
-  ruleQueue: SupportQueue,
-  ruleCategory: TicketCategory,
-) {
-  const description = context.description.toLowerCase();
-  let aiPriority = rulePriority;
-  let aiQueue = ruleQueue;
-  let aiCategory = ruleCategory;
-  let confidence = 0.78;
-  const reasons: string[] = [];
-
-  if (/all users|entire office|whole site|everybody/i.test(description)) {
-    aiPriority = normalizePriority(priorityRank(aiPriority) - 1);
-    confidence += 0.08;
-    reasons.push("Detected broad user impact in the ticket narrative.");
-  }
-
-  if (/wire transfer|phish|malware|suspicious login|compromised/i.test(description)) {
-    aiPriority = "P1_CRITICAL";
-    aiQueue = "SECURITY";
-    aiCategory = "SECURITY";
-    confidence = 0.96;
-    reasons.push("Security-adjacent language suggests active compromise risk.");
-  }
-
-  if (/new hire|starts tomorrow|start date/i.test(description)) {
-    aiPriority = normalizePriority(priorityRank(aiPriority) - 1);
-    confidence += 0.05;
-    reasons.push("Start-date language indicates a near-term onboarding dependency.");
-  }
-
-  if (/shipping|warehouse|labels|front desk/i.test(description)) {
-    aiQueue = "FIELD_SERVICES";
-    confidence += 0.04;
-    reasons.push("Operational context points to a site-specific support dependency.");
-  }
-
-  if (
-    context.requesterVip ||
-    /executive|board|finance leadership|legal partner/i.test(description)
-  ) {
-    aiPriority = normalizePriority(priorityRank(aiPriority) - 1);
-    confidence += 0.05;
-    reasons.push("Executive or leadership context justifies faster routing.");
-  }
-
-  if (context.issueType === "LOB_APPLICATION" && /order entry|billing|dispatch/i.test(description)) {
-    aiPriority = normalizePriority(priorityRank(aiPriority) - 1);
-    aiQueue = "TIER3_APPLICATIONS";
-    confidence += 0.06;
-    reasons.push("Core workflow language suggests higher business impact than the base rule.");
-  }
-
-  if (context.issueType === "PROCUREMENT_REQUEST") {
-    confidence += 0.04;
-    reasons.push("Procurement work fits a policy-driven approval flow.");
-  }
-
-  return {
-    category: aiCategory,
-    priority: aiPriority,
-    queue: aiQueue,
-    confidence: Math.min(confidence, 0.98),
-    reasoning:
-      reasons.join(" ") ||
-      "Signal quality is consistent with the deterministic route, so AI confidence remains moderate.",
-  };
-}
-
 export function selectSlaProfile(
   profiles: SlaProfile[],
   issueType: IssueType,
@@ -381,12 +309,7 @@ export function buildAutomationBundle(
     context.requesterTitle,
     context.requesterVip,
   );
-  const fallbackAiResult = buildAiOverlay(
-    context,
-    ruleResult.priority,
-    ruleResult.queue,
-    ruleResult.category,
-  );
+  const fallbackAiResult = buildHeuristicRecommendation(context, ruleResult);
   const aiResult = aiRecommendation
     ? {
         category: aiRecommendation.category,

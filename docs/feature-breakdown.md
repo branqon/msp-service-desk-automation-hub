@@ -2,7 +2,7 @@
 
 ## Dashboard
 
-- KPI cards for processed tickets, auto-triage rate, approval rate, manual minutes saved, SLA compliance, and automation candidates
+- KPI cards for processed tickets, AI-influenced routes, pending approvals, manual minutes saved, and SLA compliance
 - Charts for ticket throughput, queue mix, and recurring issue categories
 - High-risk ticket and strategic opportunity callouts
 

@@ -1,4 +1,4 @@
-import { format, formatDistanceToNowStrict } from "date-fns";
+import { format, formatDistanceStrict, formatDistanceToNowStrict } from "date-fns";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -20,6 +20,19 @@ export function formatRelativeTime(value: Date | string | null | undefined) {
   }
 
   return formatDistanceToNowStrict(new Date(value), { addSuffix: true });
+}
+
+export function formatRelativeTimeFrom(
+  value: Date | string | null | undefined,
+  referenceTime: Date | string,
+) {
+  if (!value) {
+    return "Not set";
+  }
+
+  return formatDistanceStrict(new Date(value), new Date(referenceTime), {
+    addSuffix: true,
+  });
 }
 
 export function formatPercent(value: number) {
@@ -47,23 +60,28 @@ export function isClosedStatus(status: string) {
 export function isOverdue(
   dueAt: Date | string | null | undefined,
   status: string,
+  referenceTime?: Date | string,
 ) {
   if (!dueAt || isClosedStatus(status)) {
     return false;
   }
 
-  return new Date(dueAt).getTime() < Date.now();
+  const comparisonTime = referenceTime ? new Date(referenceTime).getTime() : Date.now();
+
+  return new Date(dueAt).getTime() < comparisonTime;
 }
 
 export function getSlaRiskLevel(
   dueAt: Date | string | null | undefined,
   status: string,
+  referenceTime?: Date | string,
 ) {
   if (!dueAt || isClosedStatus(status)) {
     return "Healthy";
   }
 
-  const diffMs = new Date(dueAt).getTime() - Date.now();
+  const comparisonTime = referenceTime ? new Date(referenceTime).getTime() : Date.now();
+  const diffMs = new Date(dueAt).getTime() - comparisonTime;
   const diffMinutes = diffMs / 60000;
 
   if (diffMinutes < 0) {

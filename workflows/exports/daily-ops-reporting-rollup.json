@@ -26,7 +26,7 @@
       "name": "Aggregate KPIs",
       "parameters": {
         "language": "javascript",
-        "code": "Calculate processed volume, auto-triage rate, approvals, SLA compliance, and estimated minutes saved."
+        "code": "Calculate processed volume, AI-influenced routing rate, approvals, SLA compliance, and estimated minutes saved."
       }
     },
     {

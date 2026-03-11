@@ -2,7 +2,7 @@
 
 ## Suggested Flow
 
-1. Start on the dashboard and explain the KPI story: auto-triage rate, approvals, time saved, SLA compliance.
+1. Start on the dashboard and explain the KPI story: processed volume, AI-influenced routes, approvals, time saved, and SLA compliance.
 2. Open the queue workbench and select a ticket that shows both rule-based and AI-assisted routing.
 3. Review the ticket detail panel: SLA, internal note, customer update draft, workflow history, and audit trail.
 4. Switch to the approvals page and show a pending approval plus a historical decision.
