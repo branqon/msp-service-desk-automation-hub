@@ -27,9 +27,7 @@ def main():
         )
         page = context.new_page()
 
-        # Log console errors
-        page.on("console", lambda msg: print(f"  [console {msg.type}] {msg.text}") if msg.type in ("error", "warning") else None)
-        page.on("pageerror", lambda err: print(f"  [page error] {err}"))
+        # Skip console logging — Unicode arrows in Next.js output crash cp1252 on Windows
 
         # Dashboard - first load may be slow
         response = page.goto(f"{BASE_URL}/", wait_until="networkidle")
@@ -49,9 +47,10 @@ def main():
         # Tickets workbench - navigate to first ticket detail
         page.goto(f"{BASE_URL}/tickets", wait_until="networkidle")
         wait_for_styled(page)
-        first_ticket = page.locator('a[href^="/tickets/"]').first
-        ticket_href = first_ticket.get_attribute("href")
-        if ticket_href:
+        # Match ticket detail links (numeric IDs) but not /tickets/new
+        first_ticket = page.locator('main a[href^="/tickets/"]').first
+        ticket_href = first_ticket.get_attribute("href") if first_ticket.count() > 0 else None
+        if ticket_href and ticket_href != "/tickets/new":
             page.goto(f"{BASE_URL}{ticket_href}", wait_until="networkidle")
             wait_for_styled(page)
         page.screenshot(
