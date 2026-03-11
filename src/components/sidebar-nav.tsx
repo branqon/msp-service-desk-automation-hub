@@ -43,12 +43,11 @@ export function SidebarNav({ mobile = false }: { mobile?: boolean }) {
           <Link
             key={item.href}
             href={item.href}
-            className={cn(
-              "relative rounded-[5px] px-2.5 py-[7px] text-xs transition-colors",
-              active
-                ? "bg-white/10 text-white/90"
-                : "text-white/50 hover:bg-white/[0.07] hover:text-white/70",
-            )}
+            className="relative rounded-[5px] px-2.5 py-[7px] text-xs transition-colors"
+            style={{
+              color: active ? "#e5e5e5" : "#999",
+              backgroundColor: active ? "#1a1a1a" : undefined,
+            }}
           >
             {active && (
               <span className="absolute left-0 top-[7px] bottom-[7px] w-0.5 rounded-r-sm bg-[var(--brand-mark)]" />
