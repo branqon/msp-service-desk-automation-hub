@@ -46,8 +46,8 @@ export function SidebarNav({ mobile = false }: { mobile?: boolean }) {
             className={cn(
               "relative rounded-[5px] px-2.5 py-[7px] text-xs transition-colors",
               active
-                ? "bg-white/[0.06] text-white/[0.88]"
-                : "text-white/30 hover:bg-white/[0.04] hover:text-white/60",
+                ? "bg-white/10 text-white/90"
+                : "text-white/50 hover:bg-white/[0.07] hover:text-white/70",
             )}
           >
             {active && (
