@@ -2,8 +2,6 @@
 
 AI-assisted service desk automation platform demonstrating triage, SLA routing, approval workflows, and operational analytics. Built to show how an MSP can blend deterministic service desk logic with AI-assisted triage, note generation, customer communication, and approval gates — reducing repetitive dispatcher and technician work while keeping sensitive actions human-approved and inspectable.
 
-![Demo walkthrough](docs/demo.gif)
-
 ## Screenshots
 
 ![Dashboard overview](docs/screenshots/dashboard.png)
