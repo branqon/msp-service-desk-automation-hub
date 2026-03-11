@@ -1,6 +1,6 @@
 """
-Generate a polished system architecture diagram for the MSP Service Desk Automation Hub.
-Uses HTML/CSS rendered via Playwright screenshot. Dark theme variant.
+Generate a system architecture diagram for the MSP Service Desk Automation Hub.
+Uses HTML/CSS rendered via Playwright screenshot. Light editorial style.
 """
 
 import os
@@ -17,89 +17,59 @@ HTML_CONTENT = r"""<!DOCTYPE html>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=900">
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
     width: 900px;
-    height: 700px;
-    background: #13131a;
-    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    height: 680px;
+    background: #f1f0ec;
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
     padding: 0;
     overflow: hidden;
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
   }
 
-  /* ── header band ── */
   .header {
     width: 100%;
-    background: linear-gradient(135deg, #1e1e2a 0%, #2a2548 40%, #312e81 100%);
-    padding: 22px 0 18px;
+    background: #fff;
+    border-bottom: 1px solid #dfdcd5;
+    padding: 20px 0 16px;
     text-align: center;
-    position: relative;
-    overflow: hidden;
-    border-bottom: 1px solid rgba(129,140,248,0.18);
-  }
-  .header::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(ellipse at 30% 80%, rgba(129,140,248,0.13) 0%, transparent 55%),
-      radial-gradient(ellipse at 75% 20%, rgba(167,139,250,0.10) 0%, transparent 50%);
-  }
-  .header::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(129,140,248,0.35), transparent);
   }
   .header h1 {
-    font-size: 19px;
-    font-weight: 700;
-    color: #f1f1f4;
-    letter-spacing: 0.5px;
-    position: relative;
-    text-shadow: 0 1px 4px rgba(0,0,0,0.35);
+    font-size: 13px;
+    font-weight: 600;
+    color: #141414;
+    letter-spacing: 0;
   }
   .header .subtitle {
-    font-size: 11.5px;
+    font-size: 10.5px;
     font-weight: 400;
-    color: rgba(139,139,160,0.9);
+    color: #999;
     margin-top: 3px;
-    letter-spacing: 0.3px;
-    position: relative;
   }
 
-  /* ── flow container ── */
   .flow {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 24px 0 20px;
+    padding: 28px 0 20px;
     gap: 0;
     flex: 1;
   }
 
-  /* ── node card ── */
   .node {
-    width: 420px;
-    background: #1e1e2a;
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 12px;
-    padding: 14px 22px;
-    text-align: center;
+    width: 440px;
+    background: #fff;
+    border: 1px solid #dfdcd5;
+    border-radius: 6px;
+    padding: 12px 18px;
     position: relative;
-    box-shadow:
-      0 2px 8px rgba(0,0,0,0.35),
-      0 0 1px rgba(129,140,248,0.10);
     display: flex;
     align-items: center;
     gap: 14px;
@@ -107,145 +77,73 @@ HTML_CONTENT = r"""<!DOCTYPE html>
 
   .node .icon-box {
     flex-shrink: 0;
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
+    width: 34px;
+    height: 34px;
+    border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
-    color: #fff;
-    position: relative;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-  }
-  /* glow behind icon */
-  .node .icon-box::after {
-    content: "";
-    position: absolute;
-    inset: -3px;
-    border-radius: 13px;
-    opacity: 0.25;
-    z-index: -1;
-    filter: blur(6px);
+    background: #141414;
   }
 
-  .node .text {
-    text-align: left;
-  }
+  .node .text { text-align: left; }
 
   .node .label {
-    font-size: 14.5px;
-    font-weight: 650;
-    color: #f1f1f4;
+    font-size: 13px;
+    font-weight: 600;
+    color: #141414;
     line-height: 1.25;
   }
 
   .node .desc {
     font-size: 10.5px;
     font-weight: 400;
-    color: #8b8ba0;
-    margin-top: 2px;
+    color: #717171;
+    margin-top: 1px;
     line-height: 1.35;
   }
 
-  /* ── inner badge detail chip ── */
-  .node .inner-surface {
+  .node .step {
     position: absolute;
     top: 8px;
     right: 12px;
-    background: #262635;
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 6px;
-    padding: 2px 8px;
-    font-size: 8.5px;
+    font-size: 9px;
     font-weight: 500;
-    color: #818cf8;
-    letter-spacing: 0.4px;
-    text-transform: uppercase;
+    color: #999;
+    letter-spacing: 0.03em;
   }
 
-  /* icon-box colours per node — indigo/violet/purple spectrum */
-  .node:nth-child(1) .icon-box  { background: linear-gradient(135deg, #6366f1, #818cf8); }
-  .node:nth-child(1) .icon-box::after { background: #6366f1; }
-  .node:nth-child(1) .inner-surface { color: #818cf8; }
-
-  .node:nth-child(3) .icon-box  { background: linear-gradient(135deg, #7c3aed, #a78bfa); }
-  .node:nth-child(3) .icon-box::after { background: #7c3aed; }
-  .node:nth-child(3) .inner-surface { color: #a78bfa; }
-
-  .node:nth-child(5) .icon-box  { background: linear-gradient(135deg, #4f46e5, #818cf8); }
-  .node:nth-child(5) .icon-box::after { background: #4f46e5; }
-  .node:nth-child(5) .inner-surface { color: #818cf8; }
-
-  .node:nth-child(7) .icon-box  { background: linear-gradient(135deg, #8b5cf6, #c4b5fd); }
-  .node:nth-child(7) .icon-box::after { background: #8b5cf6; }
-  .node:nth-child(7) .inner-surface { color: #c4b5fd; }
-
-  .node:nth-child(9) .icon-box  { background: linear-gradient(135deg, #6366f1, #a5b4fc); }
-  .node:nth-child(9) .icon-box::after { background: #6366f1; }
-  .node:nth-child(9) .inner-surface { color: #a5b4fc; }
-
-  .node:nth-child(11) .icon-box { background: linear-gradient(135deg, #7c3aed, #818cf8); }
-  .node:nth-child(11) .icon-box::after { background: #7c3aed; }
-  .node:nth-child(11) .inner-surface { color: #818cf8; }
-
-  /* ── arrow connector ── */
   .arrow {
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 28px;
+    height: 24px;
     justify-content: center;
-    position: relative;
   }
-  .arrow svg {
-    display: block;
-  }
+  .arrow svg { display: block; }
 
-  /* ── subtle watermark ── */
   .watermark {
     position: absolute;
     bottom: 10px;
     right: 18px;
     font-size: 9px;
-    color: rgba(139,139,160,0.35);
-    letter-spacing: 0.3px;
-  }
-
-  /* ── ambient glow on canvas ── */
-  body::before {
-    content: "";
-    position: absolute;
-    top: 60px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 500px;
-    height: 500px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(99,102,241,0.04) 0%, transparent 70%);
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .flow, .header, .watermark {
-    position: relative;
-    z-index: 1;
+    color: #bbb;
+    letter-spacing: 0.02em;
   }
 </style>
 </head>
 <body>
 
 <div class="header">
-  <h1>MSP Service Desk Automation Hub</h1>
-  <div class="subtitle">System Architecture &middot; Request Lifecycle</div>
+  <h1>System Architecture</h1>
+  <div class="subtitle">Request lifecycle &middot; MSP Service Desk Automation Hub</div>
 </div>
 
 <div class="flow">
 
-  <!-- 1 - Ticket Intake UI -->
   <div class="node">
     <div class="icon-box">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
         <line x1="8" y1="21" x2="16" y2="21"/>
         <line x1="12" y1="17" x2="12" y2="21"/>
@@ -255,47 +153,43 @@ HTML_CONTENT = r"""<!DOCTYPE html>
       <div class="label">Ticket Intake UI</div>
       <div class="desc">Inbound requests, triage queue, priority tagging</div>
     </div>
-    <div class="inner-surface">Layer 1</div>
+    <div class="step">1</div>
   </div>
 
-  <!-- arrow -->
   <div class="arrow">
-    <svg width="16" height="28" viewBox="0 0 16 28">
-      <line x1="8" y1="0" x2="8" y2="20" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-dasharray="4 3"/>
-      <polygon points="4,18 8,26 12,18" fill="rgba(129,140,248,0.45)"/>
+    <svg width="12" height="24" viewBox="0 0 12 24">
+      <line x1="6" y1="0" x2="6" y2="17" stroke="#bbb" stroke-width="1" stroke-dasharray="3 2.5"/>
+      <polygon points="3,16 6,23 9,16" fill="#999"/>
     </svg>
   </div>
 
-  <!-- 2 - Automation Layer -->
   <div class="node">
     <div class="icon-box">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M12 2a4 4 0 0 1 4 4c0 1.95-1.4 3.58-3.25 3.93L12 22"/>
         <path d="M12 2a4 4 0 0 0-4 4c0 1.95 1.4 3.58 3.25 3.93"/>
         <circle cx="12" cy="6" r="1" fill="#fff"/>
-        <path d="M5 17h14" />
-        <path d="M7 21h10" />
+        <path d="M5 17h14"/>
+        <path d="M7 21h10"/>
       </svg>
     </div>
     <div class="text">
       <div class="label">Automation Layer</div>
-      <div class="desc">Rule engine + AI-powered recommendation engine</div>
+      <div class="desc">Rule engine + AI-assisted recommendation engine</div>
     </div>
-    <div class="inner-surface">Layer 2</div>
+    <div class="step">2</div>
   </div>
 
-  <!-- arrow -->
   <div class="arrow">
-    <svg width="16" height="28" viewBox="0 0 16 28">
-      <line x1="8" y1="0" x2="8" y2="20" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-dasharray="4 3"/>
-      <polygon points="4,18 8,26 12,18" fill="rgba(129,140,248,0.45)"/>
+    <svg width="12" height="24" viewBox="0 0 12 24">
+      <line x1="6" y1="0" x2="6" y2="17" stroke="#bbb" stroke-width="1" stroke-dasharray="3 2.5"/>
+      <polygon points="3,16 6,23 9,16" fill="#999"/>
     </svg>
   </div>
 
-  <!-- 3 - SLA Router -->
   <div class="node">
     <div class="icon-box">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="10"/>
         <polyline points="12,6 12,12 16,14"/>
       </svg>
@@ -304,21 +198,19 @@ HTML_CONTENT = r"""<!DOCTYPE html>
       <div class="label">SLA Router</div>
       <div class="desc">Priority-based routing, escalation timers, SLA enforcement</div>
     </div>
-    <div class="inner-surface">Layer 3</div>
+    <div class="step">3</div>
   </div>
 
-  <!-- arrow -->
   <div class="arrow">
-    <svg width="16" height="28" viewBox="0 0 16 28">
-      <line x1="8" y1="0" x2="8" y2="20" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-dasharray="4 3"/>
-      <polygon points="4,18 8,26 12,18" fill="rgba(129,140,248,0.45)"/>
+    <svg width="12" height="24" viewBox="0 0 12 24">
+      <line x1="6" y1="0" x2="6" y2="17" stroke="#bbb" stroke-width="1" stroke-dasharray="3 2.5"/>
+      <polygon points="3,16 6,23 9,16" fill="#999"/>
     </svg>
   </div>
 
-  <!-- 4 - Approval Gate -->
   <div class="node">
     <div class="icon-box">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
         <polyline points="9,12 11,14 15,10"/>
       </svg>
@@ -327,21 +219,19 @@ HTML_CONTENT = r"""<!DOCTYPE html>
       <div class="label">Approval Gate</div>
       <div class="desc">Manager review, policy checks, change approval workflow</div>
     </div>
-    <div class="inner-surface">Layer 4</div>
+    <div class="step">4</div>
   </div>
 
-  <!-- arrow -->
   <div class="arrow">
-    <svg width="16" height="28" viewBox="0 0 16 28">
-      <line x1="8" y1="0" x2="8" y2="20" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-dasharray="4 3"/>
-      <polygon points="4,18 8,26 12,18" fill="rgba(129,140,248,0.45)"/>
+    <svg width="12" height="24" viewBox="0 0 12 24">
+      <line x1="6" y1="0" x2="6" y2="17" stroke="#bbb" stroke-width="1" stroke-dasharray="3 2.5"/>
+      <polygon points="3,16 6,23 9,16" fill="#999"/>
     </svg>
   </div>
 
-  <!-- 5 - Workflow History -->
   <div class="node">
     <div class="icon-box">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
         <polyline points="14,2 14,8 20,8"/>
         <line x1="16" y1="13" x2="8" y2="13"/>
@@ -352,21 +242,19 @@ HTML_CONTENT = r"""<!DOCTYPE html>
       <div class="label">Workflow History</div>
       <div class="desc">Audit trail, execution logs, status tracking</div>
     </div>
-    <div class="inner-surface">Layer 5</div>
+    <div class="step">5</div>
   </div>
 
-  <!-- arrow -->
   <div class="arrow">
-    <svg width="16" height="28" viewBox="0 0 16 28">
-      <line x1="8" y1="0" x2="8" y2="20" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-dasharray="4 3"/>
-      <polygon points="4,18 8,26 12,18" fill="rgba(129,140,248,0.45)"/>
+    <svg width="12" height="24" viewBox="0 0 12 24">
+      <line x1="6" y1="0" x2="6" y2="17" stroke="#bbb" stroke-width="1" stroke-dasharray="3 2.5"/>
+      <polygon points="3,16 6,23 9,16" fill="#999"/>
     </svg>
   </div>
 
-  <!-- 6 - Metrics + Reporting -->
   <div class="node">
     <div class="icon-box">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <line x1="18" y1="20" x2="18" y2="10"/>
         <line x1="12" y1="20" x2="12" y2="4"/>
         <line x1="6" y1="20" x2="6" y2="14"/>
@@ -377,19 +265,18 @@ HTML_CONTENT = r"""<!DOCTYPE html>
       <div class="label">Metrics + Reporting</div>
       <div class="desc">KPI dashboards, SLA compliance, automation ROI</div>
     </div>
-    <div class="inner-surface">Layer 6</div>
+    <div class="step">6</div>
   </div>
 
 </div>
 
-<div class="watermark">MSP Automation Hub &middot; Architecture v2.0</div>
+<div class="watermark">MSP Automation Hub</div>
 
 </body>
 </html>"""
 
 
 def main():
-    # Write HTML to a temp file
     tmp = tempfile.NamedTemporaryFile(suffix=".html", delete=False, mode="w", encoding="utf-8")
     tmp.write(HTML_CONTENT)
     tmp.close()
@@ -399,15 +286,13 @@ def main():
         with sync_playwright() as p:
             browser = p.chromium.launch()
             page = browser.new_page(
-                viewport={"width": 900, "height": 700},
+                viewport={"width": 900, "height": 680},
                 device_scale_factor=2,
             )
             page.goto(f"file:///{tmp_path.replace(os.sep, '/')}")
             page.wait_for_load_state("networkidle")
 
-            # Ensure output directory exists
             OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-
             page.screenshot(path=str(OUTPUT_PATH), full_page=False)
             browser.close()
 
