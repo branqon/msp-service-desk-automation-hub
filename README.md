@@ -2,6 +2,10 @@
 
 AI-assisted service desk automation platform demonstrating triage, SLA routing, approval workflows, and operational analytics. Built to show how an MSP can blend deterministic service desk logic with AI-assisted triage, note generation, customer communication, and approval gates while reducing repetitive dispatcher and technician work and keeping sensitive actions human-approved and inspectable.
 
+## Demo
+
+![Walkthrough of the queue workbench, customer-update diff, and theme toggle](docs/demo.gif)
+
 ## Screenshots
 
 ![Dashboard overview](docs/screenshots/dashboard.png)
@@ -12,18 +16,29 @@ AI-assisted service desk automation platform demonstrating triage, SLA routing, 
 
 ![Automation opportunities](docs/screenshots/automation-opportunities.png)
 
+### Dark mode
+
+![Dashboard in dark mode](docs/screenshots/dashboard-dark.png)
+
+![Queue workbench in dark mode](docs/screenshots/tickets-workbench-dark.png)
+
+![Approvals center in dark mode](docs/screenshots/approvals-center-dark.png)
+
 ## Key Features
 
-- Ticket intake screen with requester, company, issue type, urgency, impact, description, and attachment placeholder fields
+- Ticket intake form with live inline validation, character counters, and a submit button that stays disabled until the payload would pass server validation
+- Queue workbench with URL-driven text search, status, priority, and queue filters, plus server-side pagination that keeps filter state in the link
 - Triage engine that shows rule-based routing and AI-assisted recommendations side by side
 - SLA routing based on priority and issue type, with visible response and resolution targets
 - AI-assisted technician notes including probable root cause, next step, and escalation guidance
-- AI-assisted customer update drafts with explicit human review before send
+- AI-assisted customer update drafts with a side-by-side reviewer diff that highlights every word the human added or removed before send
 - Approval workflow simulation for procurement, tier 3 escalation, and controlled closure
 - Workflow history and audit trail for rule-based, AI-assisted, human-approved, and manual actions
 - Metrics dashboard with realistic seeded data and reporting
 - Automation opportunities page that frames recurring ticket patterns as a strategic automation backlog
 - Mock workflow exports that resemble how the same flow could be modeled in n8n
+- Light and dark themes with a sidebar toggle, `prefers-color-scheme` fallback, and no flash-of-unstyled-content on first load
+- `POST /api/tickets` validates payloads with Zod and returns structured `fieldErrors` on 400
 
 ## Architecture
 
@@ -46,15 +61,15 @@ Related docs:
 
 ## Tech Stack
 
-- Next.js 16
+- Next.js 16 with Server Actions and dynamic routes
 - TypeScript
-- Tailwind CSS 4
-- Prisma ORM
-- SQLite
-- Recharts
-- Zod
-- Playwright
-- Pluggable AI provider abstraction with a heuristic mock implementation
+- Tailwind CSS 4 with CSS custom properties driving a light and dark theme toggle
+- Prisma ORM against SQLite for tickets, requesters, approvals, workflow runs, and audit events
+- Recharts and hand-rolled grid visualisations for KPIs
+- Zod v4 for runtime validation at every boundary (server actions, `POST /api/tickets`, intake form, approval and review endpoints)
+- A small internal word-level diff utility powering the side-by-side customer-update review — collapses to a clean before/after view when the reviewer rewrites most of the draft
+- Playwright for end-to-end flows plus Vitest for unit and integration coverage of the triage engine
+- Pluggable AI provider abstraction with a heuristic mock implementation so the demo runs without external credentials
 
 ## Demo Walkthrough
 
