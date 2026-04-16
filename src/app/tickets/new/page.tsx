@@ -7,7 +7,10 @@ import { getCompanies, getTickets } from "@/lib/service-desk";
 export const dynamic = "force-dynamic";
 
 export default async function NewTicketPage() {
-  const [companies, tickets] = await Promise.all([getCompanies(), getTickets()]);
+  const [companies, recentTickets] = await Promise.all([
+    getCompanies(),
+    getTickets({ page: 1, pageSize: 4 }),
+  ]);
 
   return (
     <div className="grid gap-5">
@@ -34,7 +37,7 @@ export default async function NewTicketPage() {
         description="Use these seeded tickets as realistic references for the quality of intake data expected by the workflow."
       >
         <div className="grid gap-4 xl:grid-cols-2">
-          {tickets.slice(0, 4).map((ticket) => (
+          {recentTickets.items.map((ticket) => (
             <div key={ticket.id} className="rounded-[5px] border border-[var(--border)] bg-[var(--background)] p-4">
               <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--faint)]">
                 {ticket.ticketNumber}

@@ -1,8 +1,6 @@
 import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
-import { EmptyState } from "@/components/ui/empty-state";
-import { SectionCard } from "@/components/ui/section-card";
 import {
   categoryLabels,
   getPriorityTone,
@@ -12,41 +10,48 @@ import {
   statusLabels,
 } from "@/lib/constants";
 import type { TicketListItem } from "@/lib/service-desk";
-import { formatDateTime, getSlaRiskLevel } from "@/lib/utils";
+import { cn, formatDateTime, getSlaRiskLevel } from "@/lib/utils";
 
 export function TicketList({
   tickets,
   selectedTicketId,
+  linkQuery = "",
+  emptyMessage,
 }: {
   tickets: TicketListItem[];
   selectedTicketId?: string;
+  linkQuery?: string;
+  emptyMessage?: string;
 }) {
   if (tickets.length === 0) {
     return (
-      <EmptyState title="No tickets seeded yet">
-        Run the seed command or submit a new intake request to populate the queue.
-      </EmptyState>
+      <div className="px-5 py-10 text-center">
+        <div className="text-sm font-medium text-[var(--ink)]">No tickets match</div>
+        <p className="mx-auto mt-1.5 max-w-sm text-xs leading-5 text-[var(--faint)]">
+          {emptyMessage ??
+            "Run the seed command or submit a new intake request to populate the queue."}
+        </p>
+      </div>
     );
   }
 
-  return (
-    <SectionCard
-      title="Incoming Queue"
-      description="Rule-based and AI-assisted routing results for the current seeded MSP workload."
-    >
-      <div className="divide-y divide-[var(--border)]">
-        {tickets.map((ticket) => {
-          const slaRisk = getSlaRiskLevel(ticket.dueResolutionAt, ticket.status);
+  const qs = linkQuery ? `?${linkQuery}` : "";
 
-          return (
+  return (
+    <ul className="divide-y divide-[var(--border)]">
+      {tickets.map((ticket) => {
+        const slaRisk = getSlaRiskLevel(ticket.dueResolutionAt, ticket.status);
+        const isSelected = selectedTicketId === ticket.id;
+
+        return (
+          <li key={ticket.id}>
             <Link
-              key={ticket.id}
-              href={`/tickets/${ticket.id}`}
-              className={`block rounded-[5px] px-4 py-3.5 transition-colors hover:bg-[#fafaf7] ${
-                selectedTicketId === ticket.id
-                  ? "bg-[var(--border-light)] ring-1 ring-[var(--ink)]/20"
-                  : ""
-              }`}
+              href={`/tickets/${ticket.id}${qs}`}
+              aria-current={isSelected ? "true" : undefined}
+              className={cn(
+                "block px-4 py-3.5 transition-colors hover:bg-[var(--row-hover)]",
+                isSelected && "bg-[var(--border-light)] ring-1 ring-inset ring-[var(--ink)]/20",
+              )}
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 flex-1">
@@ -73,9 +78,9 @@ export function TicketList({
                 </Badge>
               </div>
             </Link>
-          );
-        })}
-      </div>
-    </SectionCard>
+          </li>
+        );
+      })}
+    </ul>
   );
 }

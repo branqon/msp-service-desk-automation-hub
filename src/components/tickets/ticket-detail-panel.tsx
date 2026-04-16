@@ -277,6 +277,7 @@ export function TicketDetailPanel({ ticket }: { ticket: TicketDetail }) {
         <CustomerUpdateReviewForm
           ticketId={ticket.id}
           currentDraft={ticket.customerUpdateDraft ?? ""}
+          aiDraft={ticket.customerUpdateAiDraft ?? ticket.customerUpdateDraft ?? ""}
           reviewerName={ticket.customerUpdateReviewedBy}
         />
         <ApprovalRequestForm ticketId={ticket.id} />

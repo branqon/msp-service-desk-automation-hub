@@ -212,6 +212,7 @@ model Ticket {
   recommendedNextStep      String?
   escalationSuggestion     String?
   customerUpdateDraft      String?
+  customerUpdateAiDraft    String?
   customerUpdateReviewedAt DateTime?
   customerUpdateReviewedBy String?
   attachmentsNote          String?

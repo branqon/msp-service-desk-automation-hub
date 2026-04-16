@@ -29,8 +29,8 @@ export function ApprovalAging({ buckets }: { buckets: AgingBuckets }) {
             key={item.label}
             className={cn(
               "rounded-[5px] border border-[var(--border-light)] py-2.5 text-center",
-              item.hot === "red" && "border-[#f5cdd0] bg-[var(--red-bg)]",
-              item.hot === "amber" && "border-[#f5deb3] bg-[var(--amber-bg)]",
+              item.hot === "red" && "border-[var(--red-bg-border)] bg-[var(--red-bg)]",
+              item.hot === "amber" && "border-[var(--amber-bg-border)] bg-[var(--amber-bg)]",
             )}
           >
             <div

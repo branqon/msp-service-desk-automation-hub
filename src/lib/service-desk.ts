@@ -8,6 +8,7 @@ import {
   WorkflowStatus,
   WorkflowTrigger,
   type Priority,
+  type SupportQueue,
 } from "@prisma/client";
 import { addMinutes, startOfDay, subDays } from "date-fns";
 import { z } from "zod";
@@ -207,11 +208,87 @@ export async function getCompanies() {
   });
 }
 
-export async function getTickets() {
-  return prisma.ticket.findMany({
+export type TicketListResult = {
+  items: TicketListItem[];
+  total: number;
+  page: number;
+  pageSize: number;
+  pageCount: number;
+};
+
+export type TicketListFilters = {
+  search?: string;
+  status?: string;
+  priority?: string;
+  queue?: string;
+};
+
+export const DEFAULT_TICKET_PAGE_SIZE = 25;
+
+export async function getTickets(options?: {
+  page?: number;
+  pageSize?: number;
+  filters?: TicketListFilters;
+}): Promise<TicketListResult> {
+  const pageSize = Math.max(1, options?.pageSize ?? DEFAULT_TICKET_PAGE_SIZE);
+  const requestedPage = Math.max(1, options?.page ?? 1);
+  const filters = options?.filters ?? {};
+
+  const where: Prisma.TicketWhereInput = {};
+  const search = filters.search?.trim();
+
+  if (search) {
+    where.OR = [
+      { subject: { contains: search } },
+      { description: { contains: search } },
+      { ticketNumber: { contains: search } },
+      { company: { name: { contains: search } } },
+      { requester: { name: { contains: search } } },
+    ];
+  }
+
+  if (filters.status) {
+    where.status = filters.status as TicketStatus;
+  }
+
+  if (filters.priority) {
+    where.priority = filters.priority as Priority;
+  }
+
+  if (filters.queue) {
+    where.suggestedQueue = filters.queue as SupportQueue;
+  }
+
+  const total = await prisma.ticket.count({ where });
+  const pageCount = Math.max(1, Math.ceil(total / pageSize));
+  const page = Math.min(requestedPage, pageCount);
+
+  const items = await prisma.ticket.findMany({
+    where,
     include: ticketListInclude,
     orderBy: [{ dueResolutionAt: "asc" }, { createdAt: "desc" }],
+    skip: (page - 1) * pageSize,
+    take: pageSize,
   });
+
+  return { items, total, page, pageSize, pageCount };
+}
+
+export async function getTicketCategoryCounts(): Promise<Record<string, number>> {
+  const grouped = await prisma.ticket.groupBy({
+    by: ["category"],
+    _count: { _all: true },
+  });
+
+  const counts: Record<string, number> = {};
+
+  for (const row of grouped) {
+    if (row.category) {
+      counts[row.category] = row._count._all;
+    }
+  }
+
+  return counts;
 }
 
 export async function getTicketById(ticketId: string) {
@@ -331,6 +408,7 @@ export async function createTicket(rawInput: unknown) {
         recommendedNextStep: automation.recommendedNextStep,
         escalationSuggestion: automation.escalationSuggestion,
         customerUpdateDraft: automation.customerUpdateDraft,
+        customerUpdateAiDraft: automation.customerUpdateDraft,
         attachmentsNote: input.attachmentsNote || null,
         manualMinutesSaved: workflowMinutes,
         companyId: company.id,

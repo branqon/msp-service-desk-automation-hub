@@ -1,15 +1,15 @@
 import { Badge } from "@/components/ui/badge";
 import { SectionCard } from "@/components/ui/section-card";
 import { categoryLabels } from "@/lib/constants";
-import { getAutomationOpportunities, getTickets } from "@/lib/service-desk";
+import { getAutomationOpportunities, getTicketCategoryCounts } from "@/lib/service-desk";
 import { formatMinutes } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
 export default async function AutomationOpportunitiesPage() {
-  const [opportunities, tickets] = await Promise.all([
+  const [opportunities, categoryCounts] = await Promise.all([
     getAutomationOpportunities(),
-    getTickets(),
+    getTicketCategoryCounts(),
   ]);
 
   const estimatedMonthlyHours = opportunities.reduce(
@@ -71,9 +71,7 @@ export default async function AutomationOpportunitiesPage() {
       >
         <div className="grid gap-4">
           {opportunities.map((opportunity) => {
-            const currentVolume = tickets.filter(
-              (ticket) => ticket.category === opportunity.category,
-            ).length;
+            const currentVolume = categoryCounts[opportunity.category] ?? 0;
 
             return (
               <div

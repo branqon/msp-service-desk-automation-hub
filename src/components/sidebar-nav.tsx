@@ -11,7 +11,7 @@ export function SidebarNav({ mobile = false }: { mobile?: boolean }) {
 
   if (mobile) {
     return (
-      <nav className="flex gap-1.5 overflow-x-auto">
+      <nav className="flex flex-wrap gap-1.5">
         {navigationItems.map((item) => {
           const active =
             item.href === "/" ? pathname === item.href : pathname.startsWith(item.href);
@@ -22,7 +22,7 @@ export function SidebarNav({ mobile = false }: { mobile?: boolean }) {
               className={cn(
                 "whitespace-nowrap rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
                 active
-                  ? "bg-[var(--ink)] text-white"
+                  ? "bg-[var(--ink)] text-[var(--background)]"
                   : "text-[var(--muted)] hover:bg-[var(--border-light)] hover:text-[var(--ink)]",
               )}
             >
@@ -46,8 +46,8 @@ export function SidebarNav({ mobile = false }: { mobile?: boolean }) {
             className={cn(
               "relative rounded-[5px] px-2.5 py-[7px] text-xs transition-colors",
               active
-                ? "bg-white/10 text-[#e5e5e5]"
-                : "text-[#999] hover:bg-white/10 hover:text-[#ccc]",
+                ? "bg-white/10 text-[var(--sidebar-ink)]"
+                : "text-[var(--sidebar-muted)] hover:bg-white/10 hover:text-[var(--sidebar-ink)]",
             )}
           >
             {active && (

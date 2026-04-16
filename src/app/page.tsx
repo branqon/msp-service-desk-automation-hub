@@ -183,7 +183,7 @@ export default async function Home() {
 
         <div className="mb-9 overflow-hidden rounded-[6px] border border-[var(--border)] bg-[var(--card)]">
           {/* Table header */}
-          <div className="grid grid-cols-[40px_1fr_80px_80px_1fr_88px] border-b border-[var(--border)] bg-[#fafaf7]">
+          <div className="grid grid-cols-[40px_1fr_80px_80px_1fr_88px] border-b border-[var(--border)] bg-[var(--row-hover)]">
             {["#", "Subject", "Queue", "SLA", "AI Recommendation", "Status"].map((h) => (
               <div
                 key={h}
@@ -210,8 +210,8 @@ export default async function Home() {
                 className={cn(
                   "group relative grid grid-cols-[40px_1fr_80px_80px_1fr_88px] items-start border-b border-[var(--border-light)] transition-colors last:border-b-0",
                   isBreach
-                    ? "bg-[var(--red-bg)] hover:bg-[#f9e4e6]"
-                    : "hover:bg-[#fafaf7]",
+                    ? "bg-[var(--red-bg)] hover:bg-[var(--row-hover-danger)]"
+                    : "hover:bg-[var(--row-hover)]",
                 )}
               >
                 {/* Left accent bar */}
@@ -220,7 +220,7 @@ export default async function Home() {
                     "pointer-events-none absolute bottom-0 left-0 top-0 w-0.5 transition-colors",
                     isBreach
                       ? "bg-[var(--red)]"
-                      : "bg-transparent group-hover:bg-[#2563eb]",
+                      : "bg-transparent group-hover:bg-[var(--accent-blue)]",
                   )}
                 />
 

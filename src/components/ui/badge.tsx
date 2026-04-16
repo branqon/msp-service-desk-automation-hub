@@ -4,12 +4,12 @@ import { cn } from "@/lib/utils";
 import type { BadgeTone } from "@/lib/constants";
 
 const toneClasses: Record<BadgeTone, string> = {
-  slate: "bg-[#f1f0ec] text-[#999]",
-  blue: "bg-[#eff4ff] text-[#2563eb]",
-  amber: "bg-[#fef5e7] text-[#b36b00]",
-  red: "bg-[#fcedef] text-[#c5303e]",
-  emerald: "bg-[#ecf5f0] text-[#177a48]",
-  teal: "bg-[#141414] text-white",
+  slate: "bg-[var(--badge-slate-bg)] text-[var(--badge-slate-fg)]",
+  blue: "bg-[var(--badge-blue-bg)] text-[var(--badge-blue-fg)]",
+  amber: "bg-[var(--badge-amber-bg)] text-[var(--badge-amber-fg)]",
+  red: "bg-[var(--badge-red-bg)] text-[var(--badge-red-fg)]",
+  emerald: "bg-[var(--badge-emerald-bg)] text-[var(--badge-emerald-fg)]",
+  teal: "bg-[var(--badge-teal-bg)] text-[var(--badge-teal-fg)]",
 };
 
 interface BadgeProps {

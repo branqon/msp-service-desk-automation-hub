@@ -89,3 +89,98 @@ test("approves a seeded pending approval from the approvals center", async ({ pa
   await expect(decisionRow).toContainText("Approved");
   await expect(decisionRow).toContainText(decisionNotes);
 });
+
+test("rejects a seeded pending approval and records the decision", async ({ page }) => {
+  await page.goto("/approvals");
+
+  const firstCard = page
+    .getByTestId("pending-review-section")
+    .getByTestId("pending-approval-card")
+    .first();
+  await expect(firstCard).toBeVisible();
+
+  const approverName = "QA Rejection Bot";
+  const rejectionNotes = "Blocked pending vendor redlines.";
+
+  await firstCard.getByLabel("Approver").fill(approverName);
+  await firstCard.getByLabel("Decision Notes").fill(rejectionNotes);
+  await firstCard.getByRole("button", { name: "Reject" }).click();
+
+  const decisionRow = page
+    .getByTestId("decision-history-section")
+    .getByTestId("decision-history-row")
+    .filter({ hasText: approverName });
+
+  await expect(decisionRow).toContainText("Rejected");
+  await expect(decisionRow).toContainText(rejectionNotes);
+});
+
+test("blocks intake submission and surfaces validation feedback for bad input", async ({
+  page,
+}) => {
+  await page.goto("/tickets/new");
+
+  await selectOptionByVisibleText(page, "Company", "Summit Charter Schools");
+  await page.getByLabel("Issue Type").selectOption("USER_ONBOARDING");
+
+  const fieldsWithErrors: Array<[string, string]> = [
+    ["Requester Name", "Q"],
+    ["Requester Email", "not-an-email"],
+    ["Requester Title", "X"],
+    ["Subject", "oops"],
+    ["Description", "still short"],
+  ];
+
+  for (const [label, value] of fieldsWithErrors) {
+    const field = page.getByLabel(label);
+    await field.fill(value);
+    await field.blur();
+  }
+
+  await expect(page.getByText("At least 2 characters.").first()).toBeVisible();
+  await expect(page.getByText("Enter a valid email address.")).toBeVisible();
+  await expect(page.getByText("At least 6 characters.")).toBeVisible();
+  await expect(page.getByText("At least 20 characters.")).toBeVisible();
+
+  const submit = page.getByRole("button", { name: "Submit Ticket" });
+  await expect(submit).toBeDisabled();
+
+  // URL stays on the intake route (no navigation)
+  await expect(page).toHaveURL(/\/tickets\/new$/);
+});
+
+test("filters the queue workbench via search params", async ({ page }) => {
+  await page.goto("/tickets?q=Conference%20room%20camera");
+
+  const list = page.locator("main ul li a");
+  await expect(list).toHaveCount(1);
+  await expect(list.first()).toContainText("Conference room camera");
+
+  await page.getByRole("button", { name: "Clear" }).click();
+  await expect(page).toHaveURL(/\/tickets$/);
+  await expect(page.locator("main ul li a").first()).toBeVisible();
+});
+
+test("rejects malformed payloads from the tickets API with a 400", async ({ request }) => {
+  const response = await request.post("/api/tickets", {
+    data: {
+      companyId: "",
+      subject: "x",
+      issueType: "NOT_REAL",
+      urgency: "HIGH",
+      impact: "DEPARTMENT",
+      description: "short",
+      requesterName: "",
+      requesterEmail: "bad",
+      requesterTitle: "",
+    },
+  });
+
+  expect(response.status()).toBe(400);
+  const body = await response.json();
+  expect(body.error).toBeTruthy();
+  expect(body.fieldErrors).toBeTruthy();
+  expect(Object.keys(body.fieldErrors)).toEqual(
+    expect.arrayContaining(["subject", "description", "requesterEmail"]),
+  );
+});

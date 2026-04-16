@@ -21,6 +21,79 @@
   --green-bg: #ecf5f0;
   --sidebar-bg: #111;
   --brand-mark: #7d6f52;
+  --row-hover: #fafaf7;
+  --row-hover-danger: #f9e4e6;
+  --accent-blue: #2563eb;
+  --selection-bg: #ede5d0;
+  --selection-fg: var(--ink);
+  --badge-slate-bg: #f1f0ec;
+  --badge-slate-fg: #999;
+  --badge-blue-bg: #eff4ff;
+  --badge-blue-fg: #2563eb;
+  --badge-amber-bg: #fef5e7;
+  --badge-amber-fg: #b36b00;
+  --badge-red-bg: #fcedef;
+  --badge-red-fg: #c5303e;
+  --badge-emerald-bg: #ecf5f0;
+  --badge-emerald-fg: #177a48;
+  --badge-teal-bg: #141414;
+  --badge-teal-fg: #fff;
+  --danger-hover: #a8293a;
+  --red-bg-border: #f5cdd0;
+  --amber-bg-border: #f5deb3;
+  --sidebar-border: #1a1a1a;
+  --sidebar-ink: #e5e5e5;
+  --sidebar-muted: #8a8a8a;
+  --sidebar-faint: #666;
+  --sidebar-whisper: #444;
+}
+
+[data-theme="dark"] {
+  --background: #0f0f14;
+  --foreground: #e8e8ea;
+  --card: #1a1a22;
+  --border: #2a2a33;
+  --border-light: #23232c;
+  --ink: #e8e8ea;
+  --ink-80: #c8c8cf;
+  --ink-60: #9a9aa3;
+  --muted: #8c8c94;
+  --faint: #64646c;
+  --whisper: #474750;
+  --bone: #2f2f38;
+  --red: #f07684;
+  --red-bg: #2d1a20;
+  --amber: #e0a445;
+  --amber-bg: #2a2015;
+  --green: #52b587;
+  --green-bg: #162a22;
+  --sidebar-bg: #0a0a10;
+  --brand-mark: #9d8f72;
+  --row-hover: #23232c;
+  --row-hover-danger: #331c22;
+  --accent-blue: #7a8ffc;
+  --selection-bg: rgba(122, 143, 252, 0.2);
+  --selection-fg: #f1f1f4;
+  --badge-slate-bg: rgba(255, 255, 255, 0.06);
+  --badge-slate-fg: #9a9aa3;
+  --badge-blue-bg: rgba(122, 143, 252, 0.14);
+  --badge-blue-fg: #a5b5ff;
+  --badge-amber-bg: rgba(224, 164, 69, 0.14);
+  --badge-amber-fg: #e6b869;
+  --badge-red-bg: rgba(240, 118, 132, 0.14);
+  --badge-red-fg: #f59aa5;
+  --badge-emerald-bg: rgba(82, 181, 135, 0.14);
+  --badge-emerald-fg: #7fccab;
+  --badge-teal-bg: #e8e8ea;
+  --badge-teal-fg: #0f0f14;
+  --danger-hover: #f59aa5;
+  --red-bg-border: rgba(240, 118, 132, 0.3);
+  --amber-bg-border: rgba(224, 164, 69, 0.3);
+  --sidebar-border: #1a1a1f;
+  --sidebar-ink: #e5e5ea;
+  --sidebar-muted: #8c8c94;
+  --sidebar-faint: #666670;
+  --sidebar-whisper: #474750;
 }
 
 @theme inline {
@@ -35,6 +108,11 @@
 
 html {
   scroll-behavior: smooth;
+  color-scheme: light;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
 }
 
 body {
@@ -47,8 +125,8 @@ body {
 }
 
 ::selection {
-  background: #ede5d0;
-  color: var(--ink);
+  background: var(--selection-bg);
+  color: var(--selection-fg);
 }
 
 @layer base {

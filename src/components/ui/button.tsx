@@ -16,9 +16,9 @@ export function buttonStyles({
 } = {}) {
   const variantClass =
     variant === "primary"
-      ? "bg-[var(--ink)] text-white hover:bg-[var(--ink-80)]"
+      ? "bg-[var(--ink)] text-[var(--background)] hover:bg-[var(--ink-80)]"
       : variant === "danger"
-        ? "bg-[var(--red)] text-white hover:bg-[#a8293a]"
+        ? "bg-[var(--red)] text-[var(--card)] hover:bg-[var(--danger-hover)]"
         : "border border-[var(--border)] bg-[var(--card)] text-[var(--ink-60)] hover:border-[var(--whisper)] hover:text-[var(--ink)]";
 
   const sizeClass = size === "sm" ? "h-8 px-3 text-[11.5px]" : "h-9 px-4 text-[11.5px]";
