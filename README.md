@@ -16,14 +16,6 @@ AI-assisted service desk automation platform demonstrating triage, SLA routing, 
 
 ![Automation opportunities](docs/screenshots/automation-opportunities.png)
 
-### Dark mode
-
-![Dashboard in dark mode](docs/screenshots/dashboard-dark.png)
-
-![Queue workbench in dark mode](docs/screenshots/tickets-workbench-dark.png)
-
-![Approvals center in dark mode](docs/screenshots/approvals-center-dark.png)
-
 ## Key Features
 
 - Ticket intake form with live inline validation, character counters, and a submit button that stays disabled until the payload would pass server validation
